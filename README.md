@@ -1,2 +1,3 @@
-# gameboycore-python
-Python Bindings for GameboyCore
+# Gameboy Core Python
+
+Python Bindings for [GameboyCore](https://github.com/nnarain/gameboycore)
