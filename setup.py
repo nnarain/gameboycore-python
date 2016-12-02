@@ -6,12 +6,18 @@
 # @date Dec 1 2016
 #
 
+# install setuptools
+import ez_setup
+ez_setup.use_setuptools()
+
 from setuptools import setup, find_packages
 
 setup(
     name="gameboycore-python",
     version="0.0.0",
-    packages=find_packages(),
+    packages=find_packages('src'),
+    package_dir={'':'src'},
+
     scripts=[],
 
     # dependencies
