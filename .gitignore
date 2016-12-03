@@ -8,4 +8,8 @@
 *.gz
 
 build/*
+*egg*/*
+dist/*
+
+# Testing
 venv/*

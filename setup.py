@@ -32,12 +32,16 @@ print('-- BOOST_LIB_DIR:     %s' % BOOST_LIB_DIR)
 print('')
 
 #== Python Configuration ==
-PYTHONHOME = os.environ['PYTHONHOME']
-PYTHON_INCLUDE_DIR = os.path.join(PYTHONHOME, 'include')
-PYTHON_LIB_DIR = os.path.join(PYTHONHOME, 'libs')
+try:
+    PYTHON_ROOT = os.environ['PYTHON_ROOT']
+except KeyError as e:
+    print (('Error: PYTHON_ROOT is not set'))
+    exit(1)
+PYTHON_INCLUDE_DIR = os.path.join(PYTHON_ROOT, 'include')
+PYTHON_LIB_DIR = os.path.join(PYTHON_ROOT, 'libs')
 
 print('== Python Configuration ==')
-print('PYTHONHOME:        %s' % PYTHONHOME)
+print('PYTHON_ROOT:        %s' % PYTHON_ROOT)
 print('PYTHON_INCLUDE_DIR %s' % PYTHON_INCLUDE_DIR)
 print('PYTHON_LIB_DIR:    %s' % PYTHON_LIB_DIR)
 print('')
