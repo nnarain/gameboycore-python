@@ -8,7 +8,14 @@
 #define BOOST_PYTHON_STATIC_LIB
 #include <boost/python.hpp>
 
+namespace python = boost::python;
+
+const char* greet()
+{
+    return "Hello World";
+}
+
 BOOST_PYTHON_MODULE(gameboycore)
 {
-
+    python::def("greet", greet);
 }

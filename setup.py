@@ -31,6 +31,17 @@ print('-- BOOST_INCLUDE_DIR: %s' % BOOST_INCLUDE_DIR)
 print('-- BOOST_LIB_DIR:     %s' % BOOST_LIB_DIR)
 print('')
 
+#== Python Configuration ==
+PYTHONHOME = os.environ['PYTHONHOME']
+PYTHON_INCLUDE_DIR = os.path.join(PYTHONHOME, 'include')
+PYTHON_LIB_DIR = os.path.join(PYTHONHOME, 'libs')
+
+print('== Python Configuration ==')
+print('PYTHONHOME:        %s' % PYTHONHOME)
+print('PYTHON_INCLUDE_DIR %s' % PYTHON_INCLUDE_DIR)
+print('PYTHON_LIB_DIR:    %s' % PYTHON_LIB_DIR)
+print('')
+
 #== GameboyCore Configuration ==
 
 GAMEBOYCORE_INCLUDE_DIR = os.path.join('src', 'gameboycore', 'include')
@@ -65,11 +76,17 @@ print('')
 
 gameboycore_module = Extension(
     'gameboycore',
-    define_macros = [(endianness,"")],
-    include_dirs = [BOOST_INCLUDE_DIR, GAMEBOYCORE_INCLUDE_DIR],
+    define_macros = [
+        (endianness,''),
+        ('GAMEBOYCORE_STATIC', '')
+    ],
+    include_dirs = [
+        PYTHON_INCLUDE_DIR,
+        BOOST_INCLUDE_DIR,
+        GAMEBOYCORE_INCLUDE_DIR
+    ],
 
-    library_dirs = [BOOST_LIB_DIR],
-    #libraries = [''],
+    library_dirs = [BOOST_LIB_DIR, PYTHON_LIB_DIR],
 
     sources = sources,
 
