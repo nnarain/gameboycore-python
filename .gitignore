@@ -4,5 +4,7 @@
 *.dll
 *.zip
 *.egg
+*.tar
+*.gz
 
 build/*

@@ -1,34 +1,31 @@
 #!/usr/bin/env python
 #
-# Gameboy Core Python Bindings
+# Setup for GameboyCore Python bindings
 #
-# @author Natesh Narain
-# @date Dec 1 2016
+# @author Natesh Narain <nnaraindev@gmail.com>
+# @date Dec 2 2016
 #
 
-# install setuptools
-import ez_setup
-ez_setup.use_setuptools()
+from __future__ import print_function
 
-from setuptools import setup, find_packages
+import os
+import sys
+import platform
+
+from setuptools import setup
 from setuptools.extension import Extension
 
-setup(
-    name="gameboycore-python",
-    version="0.0.0",
-    packages=find_packages('src'),
-    package_dir={'':'src'},
+# Boost Configuration
+try:
+    BOOST_ROOT = os.environ['BOOST_ROOT']
+except KeyError as e:
+    print(('Error: BOOST_ROOT is not setup'))
+    exit(1)
 
-    scripts=[],
+BOOST_INCLUDE_DIR = BOOST_ROOT
+BOOST_LIB_DIR     = os.path.join(BOOST_ROOT, 'stage', 'lib')
 
-    # dependencies
-    install_requires=[],
-
-    # Authoring Information
-    author="Natesh Narain",
-    author_email="nnaraindev@gmail.com",
-    description="Python bindings for Gameboy Core",
-    license="MIT",
-    keywords="gameboy emulator emulation",
-    url="https://github.com/nnarain/gameboycore-python"
-)
+print('== Boost Configuration ==')
+print('-- BOOST_ROOT:        %s' % BOOST_ROOT)
+print('-- BOOST_INCLUDE_DIR: %s' % BOOST_INCLUDE_DIR)
+print('-- BOOST_LIB_DIR:     %s' % BOOST_LIB_DIR)
