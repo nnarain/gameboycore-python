@@ -19,7 +19,7 @@ from setuptools.extension import Extension
 try:
     BOOST_ROOT = os.environ['BOOST_ROOT']
 except KeyError as e:
-    print(('Error: BOOST_ROOT is not setup'))
+    print(('Error: BOOST_ROOT is not set'))
     exit(1)
 
 BOOST_INCLUDE_DIR = BOOST_ROOT
@@ -29,3 +29,5 @@ print('== Boost Configuration ==')
 print('-- BOOST_ROOT:        %s' % BOOST_ROOT)
 print('-- BOOST_INCLUDE_DIR: %s' % BOOST_INCLUDE_DIR)
 print('-- BOOST_LIB_DIR:     %s' % BOOST_LIB_DIR)
+
+# GameboyCore Configuration
