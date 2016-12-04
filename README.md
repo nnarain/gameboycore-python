@@ -1,5 +1,7 @@
 # Gameboy Core Python
 
+[![Build status](https://ci.appveyor.com/api/projects/status/hatnihg8ii76hc27?svg=true)](https://ci.appveyor.com/project/nnarain/gameboycore-python)
+
 Python Bindings for [GameboyCore](https://github.com/nnarain/gameboycore)
 
 Installation

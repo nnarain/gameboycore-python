@@ -1,0 +1,29 @@
+os: Visual Studio 2015
+
+clone_folder: c:\projects\gameboycore-python
+
+environment:
+  matrix:
+    - PYTHON: "C:\\Python35"
+    - PYTHON_VERSION: "3.5.0"
+    - PYTHON_ARCH: "32"
+
+  BOOST_ROOT: C:\Libraries\boost_1_60_0
+  PYTHON_ROOT: %PYTHON%
+
+  password:
+    secure: bkWnSpT47YhbxGA3RUIBTcvQOPbPG5ziYsQtLOE1L/c=
+
+install:
+  - set PATH=%PATH%;%PYTHON%
+  - pip install wheel
+
+build_script:
+  - cd c:\projects\gameboycore-python
+  - python setup.py build
+
+deploy_script:
+  - "echo [pypi] > %USERPROFILE%\\.pypirc"
+  - "echo username: nnarain >> %USERPROFILE%\\.pypirc"
+  - "echo password: %password% >> %USERPROFILE%\\.pypirc"
+  - python setup.py sdist bdist_wheel upload
