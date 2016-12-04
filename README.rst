@@ -1,4 +1,5 @@
-# Gameboy Core Python
+Gameboy Core Python
+===================
 
 .. image:: https://ci.appveyor.com/api/projects/status/hatnihg8ii76hc27?svg=true
     :target: https://ci.appveyor.com/project/nnarain/gameboycore-python
