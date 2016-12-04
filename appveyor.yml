@@ -11,24 +11,21 @@ environment:
   password:
     secure: bkWnSpT47YhbxGA3RUIBTcvQOPbPG5ziYsQtLOE1L/c=
 
+init:
+  - set PATH=%PYTHON_ROOT%;%PYTHON_ROOT%\Scripts;%PYTHON_ROOT%\Lib;%PATH%
 
 install:
-  - pip install setuptools --upgrade
-  - pip install scons
-  - git clone --depth=1 https://github.com/boostorg/python.git c:\libs\boost_python
-  - c:\libs\boost_python
-  - scons --boost=%BOOST_ROOT% --python=%PYTHON_ROOT%
-  - set PATH=%PYTHON_ROOT%;%PYTHON_ROOT%\Scripts;%PYTHON_ROOT%\Lib;%PATH%
   - python --version
   - pip --version
   - pip install setuptools --upgrade
   - pip install wheel
-  - dir C:\Libraries\boost_1_60_0\tools\build
+  - dir C:\Libraries\boost_1_60_0
 
 before_build:
   - cd c:\projects\gameboycore-python
   - cp config/appveyor/user-config.jam C:\Libraries\boost_1_60_0
   - cd C:\Libraries\boost_1_60_0
+  - bootstrap --with-python=python3.5
   - bjam --with-python python-debugging=off threading=multi variant=release link=statick=static
 
 build_script:
