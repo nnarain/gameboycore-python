@@ -86,6 +86,7 @@ print('')
 
 #== Setup tools ==
 
+# Extension
 gameboycore_module = Extension(
     'gameboycore',
     define_macros = [
@@ -111,7 +112,7 @@ gameboycore_module = Extension(
 
 setup(
     name="gameboycore",
-    version="0.1.0",
+    version="0.1.1",
 
     ext_modules = [gameboycore_module],
 
@@ -119,6 +120,7 @@ setup(
     author="Natesh Narain",
     author_email="nnaraindev@gmail.com",
     description="Python bindings for Gameboy Core",
+    long_description=open('README.md').read(),
     license="MIT",
     keywords="gameboy emulator emulation",
     url="https://github.com/nnarain/gameboycore-python"
