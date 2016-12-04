@@ -111,7 +111,7 @@ gameboycore_module = Extension(
 
 setup(
     name="gameboycore",
-    version="0.0.0",
+    version="0.1.0",
 
     ext_modules = [gameboycore_module],
 

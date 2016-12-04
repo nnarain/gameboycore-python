@@ -2,6 +2,11 @@ os: Visual Studio 2015
 
 clone_folder: c:\projects\gameboycore-python
 
+branches:
+  only:
+    - master
+    - deploy
+
 environment:
   PYTHON_ROOT: "C:\\Python35"
 
@@ -35,7 +40,9 @@ build_script:
   - python setup.py build
 
 deploy_script:
-  - "echo [pypi] > %USERPROFILE%\\.pypirc"
-  - "echo username: nnarain >> %USERPROFILE%\\.pypirc"
-  - "echo password: %password% >> %USERPROFILE%\\.pypirc"
-  - python setup.py sdist bdist_wheel upload
+  - echo [pypirc] > %USERPROFILE%\\.pypirc
+  - echo servers=pypi >> %USERPROFILE%\\.pypirc
+  - echo [server-login] >> %USERPROFILE%\\.pypirc
+  - echo username: nnarain >> %USERPROFILE%\\.pypirc
+  - echo password: %password% >> %USERPROFILE%\\.pypirc
+  - python setup.py sdist bdist_egg bdist_wheel upload
