@@ -17,7 +17,9 @@ install:
   - set PYTHON_ROOT=%PYTHON%
   - set PATH=%PATH%;%PYTHON%
   - set CC="C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\bin\cl.exe"
+  - pip install setuptools --upgrade
   - pip install wheel
+  - python --version
 
 build_script:
   - cd c:\projects\gameboycore-python
