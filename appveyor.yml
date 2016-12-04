@@ -44,5 +44,5 @@ deploy_script:
   - echo servers=pypi >> %USERPROFILE%\\.pypirc
   - echo [server-login] >> %USERPROFILE%\\.pypirc
   - echo username: nnarain >> %USERPROFILE%\\.pypirc
-  - echo password: %password% >> %USERPROFILE%\\.pypirc
+  - "echo password: %password% >> %USERPROFILE%\\.pypirc"
   - python setup.py sdist bdist_egg bdist_wheel upload
