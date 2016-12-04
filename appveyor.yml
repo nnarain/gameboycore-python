@@ -3,19 +3,16 @@ os: Visual Studio 2015
 clone_folder: c:\projects\gameboycore-python
 
 environment:
-  matrix:
-    - PYTHON: "C:\\Python35"
-      PYTHON_VERSION: "3.5.2"
-      PYTHON_ARCH: "32"
+  PYTHON_ROOT: "C:\\Python35"
 
   BOOST_ROOT: C:\Libraries\boost_1_60_0
+  BOOST_LIB_DIR: lib32-msvc-14.0
 
   password:
     secure: bkWnSpT47YhbxGA3RUIBTcvQOPbPG5ziYsQtLOE1L/c=
 
 init:
-  - set PYTHON_ROOT=%PYTHON%
-  - set PATH=%PYTHON%;%PATH%
+  - set PATH=%PYTHON_ROOT%;%PATH%
   - dir C:\Libraries\boost_1_60_0
   - dir C:\Libraries\boost_1_60_0\lib32-msvc-14.0
 

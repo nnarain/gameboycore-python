@@ -15,6 +15,12 @@ import platform
 from setuptools import setup
 from setuptools.extension import Extension
 
+def getenv(env_var, default_value):
+    try:
+        return os.environ[env_var]
+    except KeyError as e:
+        return default_value
+
 #== Boost Configuration ==
 try:
     BOOST_ROOT = os.environ['BOOST_ROOT']
@@ -23,7 +29,7 @@ except KeyError as e:
     exit(1)
 
 BOOST_INCLUDE_DIR = BOOST_ROOT
-BOOST_LIB_DIR     = os.path.join(BOOST_ROOT, 'stage', 'lib')
+BOOST_LIB_DIR     = os.path.join(BOOST_ROOT, getenv('BOOST_LIB_DIR', os.path.join('stage', 'lib')))
 
 print('== Boost Configuration ==')
 print('-- BOOST_ROOT:        %s' % BOOST_ROOT)
@@ -42,8 +48,8 @@ PYTHON_LIB_DIR = os.path.join(PYTHON_ROOT, 'libs')
 
 print('== Python Configuration ==')
 print('PYTHON_ROOT:        %s' % PYTHON_ROOT)
-print('PYTHON_INCLUDE_DIR %s' % PYTHON_INCLUDE_DIR)
-print('PYTHON_LIB_DIR:    %s' % PYTHON_LIB_DIR)
+print('PYTHON_INCLUDE_DIR: %s' % PYTHON_INCLUDE_DIR)
+print('PYTHON_LIB_DIR:     %s' % PYTHON_LIB_DIR)
 print('')
 
 #== GameboyCore Configuration ==
