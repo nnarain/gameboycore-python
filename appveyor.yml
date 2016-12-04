@@ -26,6 +26,7 @@ before_build:
   - cp config/appveyor/user-config.jam C:\Libraries\boost_1_60_0
   - cd C:\Libraries\boost_1_60_0
   - bootstrap
+  - dir C:\Libraries\boost_1_60_0
   - bjam --with-python python-debugging=off threading=multi variant=release link=statick=static
 
 build_script:
