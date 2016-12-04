@@ -16,6 +16,8 @@ environment:
 init:
   - set PYTHON_ROOT=%PYTHON%
   - set PATH=%PYTHON%;%PATH%
+  - dir C:\Libraries\boost_1_60_0
+  - dir C:\Libraries\boost_1_60_0\stage\lib
 
 install:
   - python --version
