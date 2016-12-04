@@ -13,6 +13,7 @@ environment:
 
 
 install:
+  - pip install setuptools --upgrade
   - pip install scons
   - git clone --depth=1 https://github.com/boostorg/python.git c:\libs\boost_python
   - c:\libs\boost_python
