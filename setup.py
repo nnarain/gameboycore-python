@@ -15,6 +15,12 @@ import platform
 from setuptools import setup
 from setuptools.extension import Extension
 
+def getenv(env_var, default_value):
+    try:
+        return os.environ[env_var]
+    except KeyError as e:
+        return default_value
+
 #== Boost Configuration ==
 try:
     BOOST_ROOT = os.environ['BOOST_ROOT']
@@ -22,13 +28,15 @@ except KeyError as e:
     print(('Error: BOOST_ROOT is not set'))
     exit(1)
 
-BOOST_INCLUDE_DIR = BOOST_ROOT
-BOOST_LIB_DIR     = os.path.join(BOOST_ROOT, 'stage', 'lib')
+BOOST_INCLUDE_DIR   = BOOST_ROOT
+BOOST_LIB_DIR       = os.path.join(BOOST_ROOT, 'stage', 'lib')
+BOOST_LIB_DIR_EXTRA = os.path.join(BOOST_ROOT, getenv('BOOST_LIB_DIR', ''))
 
 print('== Boost Configuration ==')
-print('-- BOOST_ROOT:        %s' % BOOST_ROOT)
-print('-- BOOST_INCLUDE_DIR: %s' % BOOST_INCLUDE_DIR)
-print('-- BOOST_LIB_DIR:     %s' % BOOST_LIB_DIR)
+print('-- BOOST_ROOT:          %s' % BOOST_ROOT)
+print('-- BOOST_INCLUDE_DIR:   %s' % BOOST_INCLUDE_DIR)
+print('-- BOOST_LIB_DIR:       %s' % BOOST_LIB_DIR)
+print('-- BOOST_LIB_DIR_EXTRA: %s' % BOOST_LIB_DIR_EXTRA)
 print('')
 
 #== Python Configuration ==
@@ -42,8 +50,8 @@ PYTHON_LIB_DIR = os.path.join(PYTHON_ROOT, 'libs')
 
 print('== Python Configuration ==')
 print('PYTHON_ROOT:        %s' % PYTHON_ROOT)
-print('PYTHON_INCLUDE_DIR %s' % PYTHON_INCLUDE_DIR)
-print('PYTHON_LIB_DIR:    %s' % PYTHON_LIB_DIR)
+print('PYTHON_INCLUDE_DIR: %s' % PYTHON_INCLUDE_DIR)
+print('PYTHON_LIB_DIR:     %s' % PYTHON_LIB_DIR)
 print('')
 
 #== GameboyCore Configuration ==
@@ -90,7 +98,11 @@ gameboycore_module = Extension(
         GAMEBOYCORE_INCLUDE_DIR
     ],
 
-    library_dirs = [BOOST_LIB_DIR, PYTHON_LIB_DIR],
+    library_dirs = [
+        BOOST_LIB_DIR,
+        PYTHON_LIB_DIR,
+        BOOST_LIB_DIR_EXTRA
+    ],
 
     sources = sources,
 
@@ -99,7 +111,7 @@ gameboycore_module = Extension(
 
 setup(
     name="gameboycore",
-    version="0.0.0",
+    version="0.1.0",
 
     ext_modules = [gameboycore_module],
 
