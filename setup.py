@@ -28,13 +28,15 @@ except KeyError as e:
     print(('Error: BOOST_ROOT is not set'))
     exit(1)
 
-BOOST_INCLUDE_DIR = BOOST_ROOT
-BOOST_LIB_DIR     = os.path.join(BOOST_ROOT, getenv('BOOST_LIB_DIR', os.path.join('stage', 'lib')))
+BOOST_INCLUDE_DIR   = BOOST_ROOT
+BOOST_LIB_DIR       = os.path.join(BOOST_ROOT, 'stage', 'lib')
+BOOST_LIB_DIR_EXTRA = os.path.join(BOOST_ROOT, getenv('BOOST_LIB_DIR', ''))
 
 print('== Boost Configuration ==')
-print('-- BOOST_ROOT:        %s' % BOOST_ROOT)
-print('-- BOOST_INCLUDE_DIR: %s' % BOOST_INCLUDE_DIR)
-print('-- BOOST_LIB_DIR:     %s' % BOOST_LIB_DIR)
+print('-- BOOST_ROOT:          %s' % BOOST_ROOT)
+print('-- BOOST_INCLUDE_DIR:   %s' % BOOST_INCLUDE_DIR)
+print('-- BOOST_LIB_DIR:       %s' % BOOST_LIB_DIR)
+print('-- BOOST_LIB_DIR_EXTRA: %s' % BOOST_LIB_DIR_EXTRA)
 print('')
 
 #== Python Configuration ==
@@ -96,7 +98,11 @@ gameboycore_module = Extension(
         GAMEBOYCORE_INCLUDE_DIR
     ],
 
-    library_dirs = [BOOST_LIB_DIR, PYTHON_LIB_DIR],
+    library_dirs = [
+        BOOST_LIB_DIR,
+        PYTHON_LIB_DIR,
+        BOOST_LIB_DIR_EXTRA
+    ],
 
     sources = sources,
 
