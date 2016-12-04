@@ -25,7 +25,7 @@ before_build:
   - cd c:\projects\gameboycore-python
   - cp config/appveyor/user-config.jam C:\Libraries\boost_1_60_0
   - cd C:\Libraries\boost_1_60_0
-  - bootstrap --with-python=python3.5
+  - bootstrap
   - bjam --with-python python-debugging=off threading=multi variant=release link=statick=static
 
 build_script:
