@@ -9,12 +9,12 @@ environment:
     - PYTHON_ARCH: "32"
 
   BOOST_ROOT: C:\Libraries\boost_1_60_0
-  PYTHON_ROOT: %PYTHON%
 
   password:
     secure: bkWnSpT47YhbxGA3RUIBTcvQOPbPG5ziYsQtLOE1L/c=
 
 install:
+  - set PYTHON_ROOT=%PYTHON%
   - set PATH=%PATH%;%PYTHON%
   - pip install wheel
 
