@@ -12,9 +12,7 @@ environment:
     secure: bkWnSpT47YhbxGA3RUIBTcvQOPbPG5ziYsQtLOE1L/c=
 
 init:
-  - set PATH=%PYTHON_ROOT%;%PATH%
-  - dir C:\Libraries\boost_1_60_0
-  - dir C:\Libraries\boost_1_60_0\lib32-msvc-14.0
+  - set PATH=%PYTHON_ROOT%;%PYTHON_ROOT%\Scripts;%PYTHON_ROOT%\Lib;%PATH%
 
 install:
   - python --version
