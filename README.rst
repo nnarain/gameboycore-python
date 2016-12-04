@@ -10,8 +10,7 @@ Gameboy Core Python
 .. image:: https://readthedocs.org/projects/gameboycore-python/badge/?version=latest
     :target: http://gameboycore-python.readthedocs.io/en/latest/?badge=latest
 
-Python Bindings for `GameboyCore`
-.. GameboyCore: https://github.com/nnarain/gameboycore
+Python Bindings for `GameboyCore <https://github.com/nnarain/gameboycore>`_
 
 Installation
 ------------
