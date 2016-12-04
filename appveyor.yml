@@ -5,7 +5,7 @@ clone_folder: c:\projects\gameboycore-python
 environment:
   matrix:
     - PYTHON: "C:\\Python35"
-      PYTHON_VERSION: "3.5.0"
+      PYTHON_VERSION: "3.5.2"
       PYTHON_ARCH: "32"
 
   BOOST_ROOT: C:\Libraries\boost_1_60_0
@@ -13,19 +13,21 @@ environment:
   password:
     secure: bkWnSpT47YhbxGA3RUIBTcvQOPbPG5ziYsQtLOE1L/c=
 
-install:
+init:
   - set PYTHON_ROOT=%PYTHON%
   - set PATH=%PATH%;%PYTHON%
-  - set CC="C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\bin\cl.exe"
+
+install:
+  - python --version
+  - pip --version
   - pip install setuptools --upgrade
   - pip install wheel
-  - python --version
 
 build_script:
   - cd c:\projects\gameboycore-python
   - git submodule init
   - git submodule update
-  - python setup.py build -c %CC%
+  - python setup.py build
 
 deploy_script:
   - "echo [pypi] > %USERPROFILE%\\.pypirc"
