@@ -16,6 +16,7 @@ environment:
 install:
   - set PYTHON_ROOT=%PYTHON%
   - set PATH=%PATH%;%PYTHON%
+  - set CC="C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\BIN\cl.exe"
   - pip install wheel
 
 build_script:
