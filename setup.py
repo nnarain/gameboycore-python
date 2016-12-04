@@ -120,7 +120,7 @@ setup(
     author="Natesh Narain",
     author_email="nnaraindev@gmail.com",
     description="Python bindings for Gameboy Core",
-    long_description=open('README.md').read(),
+    long_description=open('README.rst').read(),
     license="MIT",
     keywords="gameboy emulator emulation",
     url="https://github.com/nnarain/gameboycore-python"
