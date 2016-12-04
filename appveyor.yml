@@ -17,7 +17,7 @@ init:
   - set PYTHON_ROOT=%PYTHON%
   - set PATH=%PYTHON%;%PATH%
   - dir C:\Libraries\boost_1_60_0
-  - dir C:\Libraries\boost_1_60_0\libs\python\build
+  - dir C:\Libraries\boost_1_60_0\lib32-msvc-14.0
 
 install:
   - python --version
