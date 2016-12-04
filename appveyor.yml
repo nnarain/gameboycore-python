@@ -15,7 +15,7 @@ environment:
 
 init:
   - set PYTHON_ROOT=%PYTHON%
-  - set PATH=%PATH%;%PYTHON%
+  - set PATH=%PYTHON%;%PATH%
 
 install:
   - python --version
