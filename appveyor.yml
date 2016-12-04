@@ -21,6 +21,12 @@ install:
   - pip install wheel
   - dir C:\Libraries\boost_1_60_0\tools\build
 
+before_build:
+  - cd c:\projects\gameboycore-python
+  - cp config/appveyor/user-config.jam C:\Libraries\boost_1_60_0
+  - cd C:\Libraries\boost_1_60_0
+  - bjam --with-python python-debugging=off threading=multi variant=release link=statick=static
+
 build_script:
   - cd c:\projects\gameboycore-python
   - git submodule init
