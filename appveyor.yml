@@ -11,10 +11,13 @@ environment:
   password:
     secure: bkWnSpT47YhbxGA3RUIBTcvQOPbPG5ziYsQtLOE1L/c=
 
-init:
-  - set PATH=%PYTHON_ROOT%;%PYTHON_ROOT%\Scripts;%PYTHON_ROOT%\Lib;%PATH%
 
 install:
+  - pip install scons
+  - git clone --depth=1 https://github.com/boostorg/python.git c:\libs\boost_python
+  - c:\libs\boost_python
+  - scons --boost=%BOOST_ROOT% --python=%PYTHON_ROOT%
+  - set PATH=%PYTHON_ROOT%;%PYTHON_ROOT%\Scripts;%PYTHON_ROOT%\Lib;%PATH%
   - python --version
   - pip --version
   - pip install setuptools --upgrade
