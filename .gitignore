@@ -1,0 +1,15 @@
+*.pyc
+*.pyd
+*.so
+*.dll
+*.zip
+*.egg
+*.tar
+*.gz
+
+build/*
+*egg*/*
+dist/*
+
+# Testing
+venv/*
