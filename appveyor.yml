@@ -19,7 +19,7 @@ install:
   - pip --version
   - pip install setuptools --upgrade
   - pip install wheel
-  - dir C:\Libraries\boost_1_60_0\tools
+  - dir C:\Libraries\boost_1_60_0\tools\build
 
 build_script:
   - cd c:\projects\gameboycore-python
