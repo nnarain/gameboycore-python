@@ -19,13 +19,7 @@ install:
   - pip --version
   - pip install setuptools --upgrade
   - pip install wheel
-
-before_build:
-  - cd c:\projects\gameboycore-python
-  - cp config/appveyor/user-config.jam C:\Libraries\boost_1_60_0
-  - cd C:\Libraries\boost_1_60_0
-  - bootstrap --with-python=python3.5
-  - bjam --with-python python-debugging=off threading=multi variant=release link=static
+  - dir C:\Libraries\boost_1_60_0\tools
 
 build_script:
   - cd c:\projects\gameboycore-python
