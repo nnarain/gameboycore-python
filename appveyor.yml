@@ -5,15 +5,22 @@ clone_folder: c:\projects\gameboycore-python
 branches:
   only:
     - master
+    - multiple-versions
 
 environment:
-  PYTHON_ROOT: "C:\\Python35"
-
   BOOST_ROOT: C:\Libraries\boost_1_60_0
   BOOST_LIB_DIR: lib32-msvc-14.0
 
   password:
     secure: bkWnSpT47YhbxGA3RUIBTcvQOPbPG5ziYsQtLOE1L/c=
+
+  matrix:
+    - PYTHON_ROOT: "C:\\Python33"
+      PYTHON_VERSION: 3.3
+    - PYTHON_ROOT: "C:\\Python34"
+      PYTHON_VERSION: 3.4
+    - PYTHON_ROOT: "C:\\Python35"
+      PYTHON_VERSION: 3.5
 
 init:
   - set PATH=%PYTHON_ROOT%;%PYTHON_ROOT%\Scripts;%PYTHON_ROOT%\Lib;%PATH%
@@ -26,7 +33,7 @@ install:
 
 before_build:
   - cd c:\projects\gameboycore-python
-  - cp config\appveyor\user-config.jam C:\Libraries\boost_1_60_0
+  - echo "using python : %PYTHON_VERSION% : %PYTHON_ROOT% : %PYTHON_ROOT%\\include : %PYTHON_ROOT%\\libs ;" > C:\Libraries\boost_1_60_0\user-config.jam
   - cd C:\Libraries\boost_1_60_0
   - bootstrap
   - bjam --with-python python-debugging=off threading=multi variant=release link=static
@@ -45,4 +52,4 @@ deploy_script:
   - echo [server-login] >> %HOME%\\.pypirc
   - echo username:nnarain >> %HOME%\\.pypirc
   - "echo password:%password% >> %HOME%\\.pypirc"
-  - python setup.py sdist bdist_egg bdist_wheel upload
+  - python setup.py sdist bdist_egg bdist_wheel #upload
