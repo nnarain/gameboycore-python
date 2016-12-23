@@ -77,7 +77,7 @@ for current_dir, dirs, files in os.walk(os.path.join(DIR, 'src')):
 
 endianness = '__LITTLEENDIAN__' if sys.byteorder == 'little' else '__BIGENDIAN__'
 
-cxx_flags = '-std=c++11'
+cxx_flags = '-std=gnu++11'
 if platform.system() == 'Linux':
     cxx_flags = '-std=c++11'
 
