@@ -21,6 +21,9 @@ def getenv(env_var, default_value):
     except KeyError as e:
         return default_value
 
+# get this directory
+DIR = os.path.dirname(os.path.realpath(__file__))
+
 #== Boost Configuration ==
 try:
     BOOST_ROOT = os.environ['BOOST_ROOT']
@@ -56,11 +59,11 @@ print('')
 
 #== GameboyCore Configuration ==
 
-GAMEBOYCORE_INCLUDE_DIR = os.path.join('src', 'gameboycore', 'include')
+GAMEBOYCORE_INCLUDE_DIR = os.path.join(DIR, 'src', 'gameboycore', 'include')
 
 # collect sources
 sources = []
-for current_dir, dirs, files in os.walk('src'):
+for current_dir, dirs, files in os.walk(os.path.join(DIR, 'src')):
     # skip test code
     if 'tests' in dirs:
         dirs.remove('tests')
@@ -110,6 +113,8 @@ gameboycore_module = Extension(
     extra_compile_args=[cxx_flags]
 )
 
+readme_file = os.path.join(DIR, 'README.rst')
+
 setup(
     name="gameboycore",
     version="0.1.1",
@@ -120,7 +125,7 @@ setup(
     author="Natesh Narain",
     author_email="nnaraindev@gmail.com",
     description="Python bindings for Gameboy Core",
-    long_description=open('README.rst').read(),
+    long_description=open(readme_file).read(),
     license="MIT",
     keywords="gameboy emulator emulation",
     url="https://github.com/nnarain/gameboycore-python"
