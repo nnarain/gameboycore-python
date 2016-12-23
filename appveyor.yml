@@ -33,7 +33,7 @@ install:
 
 before_build:
   - cd c:\projects\gameboycore-python
-  - echo "using python : %PYTHON_VERSION% : %PYTHON_ROOT% : %PYTHON_ROOT%\\include : %PYTHON_ROOT%\\libs ;" > C:\Libraries\boost_1_60_0\user-config.jam
+  - echo "using python : %PYTHON_VERSION% : %PYTHON_ROOT% : %PYTHON_ROOT%\include : %PYTHON_ROOT%\libs ;" > C:\Libraries\boost_1_60_0\user-config.jam
   - cd C:\Libraries\boost_1_60_0
   - bootstrap
   - bjam --with-python python-debugging=off threading=multi variant=release link=static
