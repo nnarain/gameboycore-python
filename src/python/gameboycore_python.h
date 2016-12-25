@@ -1,39 +1,71 @@
 #ifndef GAMEBOYCORE_PYTHON_H
 #define GAMEBOYCORE_PYTHON_H
 
+#include <boost/python.hpp>
+
 #include <gameboycore/gameboycore.h>
+#include <fstream>
+#include <vector>
+#include <array>
+#include <functional>
+#include <iostream>
+#include <cstdint>
 
 class GameboyCorePython : public gb::GameboyCore
 {
 public:
+    using PixelList = std::vector<gb::Pixel>;
+
+    enum class KeyAction
+    {
+        PRESS, RELEASE
+    };
+
+    template<class T, int N>
+    static boost::python::list arrayToList(const std::array<T, N>& arr)
+    {
+        std::vector<T> vec(arr.begin(), arr.end());
+        auto iter = boost::python::iterator<std::vector<T>>()(vec);
+
+        return boost::python::list(iter);
+    }
 
     GameboyCorePython()
     {
     }
 
-    gb::APU& apu()
+    void registerGpuCallback(boost::python::object callable)
     {
-        return *this->getAPU().get();
+        gpuCallback_ = callable;
+        this->getGPU()->setRenderCallback(
+            std::bind(&GameboyCorePython::scanlineCallback, this, std::placeholders::_1, std::placeholders::_2)
+        );
     }
 
-    gb::CPU& cpu()
+    void input(gb::Joy::Key key, KeyAction action)
     {
-        return *this->getCPU().get();
+        if(action == KeyAction::PRESS)
+        {
+            this->getJoypad()->press(key);
+        }
+        else
+        {
+            this->getJoypad()->release(key);
+        }
     }
 
-    gb::GPU& gpu()
+    void open(const std::string& rom_file)
     {
-        return *this->getGPU().get();
-    }
+        std::ifstream file(rom_file, std::ios::binary | std::ios::ate);
+        auto size = file.tellg();
 
-    gb::Joy& joy()
-    {
-        return *this->getJoypad().get();
-    }
+        std::vector<uint8_t> buffer;
+        buffer.resize(size);
 
-    gb::MMU& mmu()
-    {
-        return *this->getMMU().get();
+        file.seekg(0, std::ios::beg);
+        file.read((char*)&buffer[0], size);
+
+        this->loadROM(&buffer[0], size);
     }
 
     ~GameboyCorePython()
@@ -41,6 +73,13 @@ public:
     }
 
 private:
+    void scanlineCallback(const gb::GPU::Scanline& scanline, int line)
+    {
+        gpuCallback_(arrayToList(scanline), line);
+    }
+
+private:
+    boost::python::object gpuCallback_;
 };
 
 #endif // GAMEBOYCORE_PYTHON_H
