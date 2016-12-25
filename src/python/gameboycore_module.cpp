@@ -23,8 +23,23 @@ BOOST_PYTHON_MODULE(gameboycore)
     class_<GameboyCorePython::PixelList>("PixelList")
         .def(boost::python::vector_indexing_suite<GameboyCorePython::PixelList>());
 
+    enum_<gb::Joy::Key>("JoypadKey")
+        .value("KEY_RIGHT",  gb::Joy::Key::RIGHT)
+        .value("KEY_LEFT",   gb::Joy::Key::LEFT)
+        .value("KEY_UP",     gb::Joy::Key::UP)
+        .value("KEY_DOWN",   gb::Joy::Key::DOWN)
+        .value("KEY_A",      gb::Joy::Key::A)
+        .value("KEY_B",      gb::Joy::Key::B)
+        .value("KEY_SELECT", gb::Joy::Key::SELECT)
+        .value("KEY_START",  gb::Joy::Key::START);
+
+    enum_<GameboyCorePython::KeyAction>("KeyAction")
+        .value("ACTION_PRESS", GameboyCorePython::KeyAction::PRESS)
+        .value("ACTION_RELEASE", GameboyCorePython::KeyAction::RELEASE);
+
     class_<GameboyCorePython>("GameboyCore")
         .def("update", &GameboyCorePython::update)
         .def("open", &GameboyCorePython::open)
+        .def("input", &GameboyCorePython::input)
         .def("registerGpuCallback", &GameboyCorePython::registerGpuCallback);
 }
