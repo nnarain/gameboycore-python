@@ -1,39 +1,53 @@
 #ifndef GAMEBOYCORE_PYTHON_H
 #define GAMEBOYCORE_PYTHON_H
 
+#include <boost/python.hpp>
+
 #include <gameboycore/gameboycore.h>
+#include <fstream>
+#include <vector>
+#include <array>
+#include <functional>
+#include <cstdint>
 
 class GameboyCorePython : public gb::GameboyCore
 {
 public:
+    using PixelList = std::vector<gb::Pixel>;
+
+    template<class T, int N>
+    static boost::python::list arrayToList(const std::array<T, N>& arr)
+    {
+        auto vec = std::vector<T>(arr.begin(), arr.end());
+        auto iter = boost::python::iterator<std::vector<T>>()(vec);
+
+        return boost::python::list(iter);
+    }
 
     GameboyCorePython()
     {
     }
 
-    gb::APU& apu()
+    void registerGpuCallback(boost::python::object callable)
     {
-        return *this->getAPU().get();
+        gpuCallback_ = callable;
+        this->getGPU()->setRenderCallback(
+            std::bind(&GameboyCorePython::scanlineCallback, this, std::placeholders::_1, std::placeholders::_2)
+        );
     }
 
-    gb::CPU& cpu()
+    void open(const std::string& rom_file)
     {
-        return *this->getCPU().get();
-    }
+        std::ifstream file(rom_file, std::ios::binary | std::ios::ate);
+        auto size = file.tellg();
 
-    gb::GPU& gpu()
-    {
-        return *this->getGPU().get();
-    }
+        std::vector<uint8_t> buffer;
+        buffer.resize(size);
 
-    gb::Joy& joy()
-    {
-        return *this->getJoypad().get();
-    }
+        file.seekg(0, std::ios::beg);
+        file.read((char*)&buffer[0], size);
 
-    gb::MMU& mmu()
-    {
-        return *this->getMMU().get();
+        this->loadROM(&buffer[0], size);
     }
 
     ~GameboyCorePython()
@@ -41,6 +55,14 @@ public:
     }
 
 private:
+    void scanlineCallback(const gb::GPU::Scanline& scanline, int line)
+    {
+        auto list = arrayToList(scanline);
+        gpuCallback_(list, line);
+    }
+
+private:
+    boost::python::object gpuCallback_;
 };
 
 #endif // GAMEBOYCORE_PYTHON_H
