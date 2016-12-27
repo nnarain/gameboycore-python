@@ -14,20 +14,26 @@
 class GameboyCorePython : public gb::GameboyCore
 {
 public:
-    using PixelList = std::vector<gb::Pixel>;
+    using PixelList  = std::vector<gb::Pixel>;
+    using SpriteList = std::vector<gb::Sprite>;
 
     enum class KeyAction
     {
         PRESS, RELEASE
     };
 
+    template<class Vector>
+    static boost::python::list vectorToList(const Vector& vec)
+    {
+        auto iter = boost::python::iterator<Vector>()(vec);
+        return boost::python::list(iter);
+    }
+
     template<class T, int N>
     static boost::python::list arrayToList(const std::array<T, N>& arr)
     {
         std::vector<T> vec(arr.begin(), arr.end());
-        auto iter = boost::python::iterator<std::vector<T>>()(vec);
-
-        return boost::python::list(iter);
+        return vectorToList(vec);
     }
 
     GameboyCorePython()
@@ -66,6 +72,11 @@ public:
         file.read((char*)&buffer[0], size);
 
         this->loadROM(&buffer[0], size);
+    }
+
+    boost::python::list getSpriteCache()
+    {
+        return vectorToList(this->getGPU()->getSpriteCache());
     }
 
     ~GameboyCorePython()

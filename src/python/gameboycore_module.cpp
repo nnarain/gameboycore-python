@@ -37,9 +37,20 @@ BOOST_PYTHON_MODULE(gameboycore)
         .value("ACTION_PRESS", GameboyCorePython::KeyAction::PRESS)
         .value("ACTION_RELEASE", GameboyCorePython::KeyAction::RELEASE);
 
-    class_<GameboyCorePython>("GameboyCore")
-        .def("update", &GameboyCorePython::update)
-        .def("open", &GameboyCorePython::open)
-        .def("input", &GameboyCorePython::input)
-        .def("registerGpuCallback", &GameboyCorePython::registerGpuCallback);
+    class_<gb::Sprite>("Sprite")
+        .def_readwrite("y",      &gb::Sprite::y)
+        .def_readwrite("x",      &gb::Sprite::x)
+        .def_readwrite("tile",   &gb::Sprite::tile)
+        .def_readwrite("attr",   &gb::Sprite::attr)
+        .def_readwrite("height", &gb::Sprite::height);
+
+    class_<GameboyCorePython::SpriteList>("SpriteList")
+        .def(boost::python::vector_indexing_suite<GameboyCorePython::SpriteList>());
+
+    class_<GameboyCorePython, boost::noncopyable>("GameboyCore")
+        .def("update",              &GameboyCorePython::update)
+        .def("open",                &GameboyCorePython::open)
+        .def("input",               &GameboyCorePython::input)
+        .def("registerGpuCallback", &GameboyCorePython::registerGpuCallback)
+        .def("getSpriteCache",      &GameboyCorePython::getSpriteCache);
 }
