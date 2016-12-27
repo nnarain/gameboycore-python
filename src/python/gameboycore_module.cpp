@@ -44,9 +44,13 @@ BOOST_PYTHON_MODULE(gameboycore)
         .def_readwrite("attr",   &gb::Sprite::attr)
         .def_readwrite("height", &gb::Sprite::height);
 
+    class_<GameboyCorePython::SpriteList>("SpriteList")
+        .def(boost::python::vector_indexing_suite<GameboyCorePython::SpriteList>());
+
     class_<GameboyCorePython, boost::noncopyable>("GameboyCore")
         .def("update",              &GameboyCorePython::update)
         .def("open",                &GameboyCorePython::open)
         .def("input",               &GameboyCorePython::input)
-        .def("registerGpuCallback", &GameboyCorePython::registerGpuCallback);
+        .def("registerGpuCallback", &GameboyCorePython::registerGpuCallback)
+        .def("getSpriteCache",      &GameboyCorePython::getSpriteCache);
 }
