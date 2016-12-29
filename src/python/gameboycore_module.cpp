@@ -47,10 +47,15 @@ BOOST_PYTHON_MODULE(gameboycore)
     class_<GameboyCorePython::SpriteList>("SpriteList")
         .def(boost::python::vector_indexing_suite<GameboyCorePython::SpriteList>());
 
+    class_<GameboyCorePython::ByteList>("ByteList")
+        .def(boost::python::vector_indexing_suite<GameboyCorePython::ByteList>());
+
     class_<GameboyCorePython, boost::noncopyable>("GameboyCore")
-        .def("update",              &GameboyCorePython::update)
-        .def("open",                &GameboyCorePython::open)
-        .def("input",               &GameboyCorePython::input)
-        .def("registerGpuCallback", &GameboyCorePython::registerGpuCallback)
-        .def("getSpriteCache",      &GameboyCorePython::getSpriteCache);
+        .def("update",                   &GameboyCorePython::update)
+        .def("open",                     &GameboyCorePython::open)
+        .def("input",                    &GameboyCorePython::input)
+        .def("registerScanlineCallback", &GameboyCorePython::registerScanlineCallback)
+        .def("registerVBlankCallback",   &GameboyCorePython::registerVBlankCallback)
+        .def("getBackgroundTileMap",     &GameboyCorePython::getBackgroundTileMap)
+        .def("getSpriteCache",           &GameboyCorePython::getSpriteCache);
 }
