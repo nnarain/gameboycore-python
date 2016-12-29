@@ -16,6 +16,7 @@ class GameboyCorePython : public gb::GameboyCore
 public:
     using PixelList  = std::vector<gb::Pixel>;
     using SpriteList = std::vector<gb::Sprite>;
+    using ByteList   = std::vector<uint8_t>;
 
     enum class KeyAction
     {
@@ -40,12 +41,33 @@ public:
     {
     }
 
-    void registerGpuCallback(boost::python::object callable)
+    void registerScanlineCallback(boost::python::object callable)
     {
-        gpuCallback_ = callable;
-        this->getGPU()->setRenderCallback(
-            std::bind(&GameboyCorePython::scanlineCallback, this, std::placeholders::_1, std::placeholders::_2)
-        );
+        if(PyCallable_Check(callable.ptr()))
+        {
+            scanline_callback_ = callable;
+            this->getGPU()->setRenderCallback(
+                std::bind(&GameboyCorePython::scanlineCallback, this, std::placeholders::_1, std::placeholders::_2)
+            );
+        }
+        else
+        {
+            PyErr_SetString(PyExc_TypeError, "Object is not callable");
+            boost::python::throw_error_already_set();
+        }
+    }
+
+    void registerVBlankCallback(boost::python::object callable)
+    {
+        if(PyCallable_Check(callable.ptr()))
+        {
+            vblank_callback_ = callable;
+        }
+        else
+        {
+            PyErr_SetString(PyExc_TypeError, "Object is not callable");
+            boost::python::throw_error_already_set();
+        }
     }
 
     void input(gb::Joy::Key key, KeyAction action)
@@ -79,6 +101,11 @@ public:
         return vectorToList(this->getGPU()->getSpriteCache());
     }
 
+    boost::python::list getBackgroundTileMap()
+    {
+        return vectorToList(this->getGPU()->getBackgroundTileMap());
+    }
+
     ~GameboyCorePython()
     {
     }
@@ -86,11 +113,20 @@ public:
 private:
     void scanlineCallback(const gb::GPU::Scanline& scanline, int line)
     {
-        gpuCallback_(arrayToList(scanline), line);
+        scanline_callback_(arrayToList(scanline), line);
+
+        if(line == 143)
+        {
+            if(PyCallable_Check(vblank_callback_.ptr()))
+            {
+                vblank_callback_();
+            }
+        }
     }
 
 private:
-    boost::python::object gpuCallback_;
+    boost::python::object scanline_callback_;
+    boost::python::object vblank_callback_;
 };
 
 #endif // GAMEBOYCORE_PYTHON_H
