@@ -3,20 +3,23 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-Welcome to GameboyCore Python's documentation!
-==============================================
+GameboyCore Python's documentation!
+===================================
 
-Contents:
+.. image:: https://ci.appveyor.com/api/projects/status/hatnihg8ii76hc27?svg=true
+    :target: https://ci.appveyor.com/project/nnarain/gameboycore-python
+
+.. image:: https://img.shields.io/pypi/v/gameboycore.svg
+    :target: https://pypi.python.org/pypi/gameboycore
+
+.. image:: https://readthedocs.org/projects/gameboycore-python/badge/?version=latest
+    :target: http://gameboycore-python.readthedocs.io/en/latest/?badge=latest
+
+GameboyCore Python is the Python binding for the GameboyCore library, enabling
+an easily embeddable Gameboy emulator that can interacted with via Python scripts!
 
 .. toctree::
    :maxdepth: 2
 
    installation
    example
-
-Indices and tables
-==================
-
-* :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`
