@@ -36,16 +36,15 @@ before_build:
   - cd c:\projects\gameboycore-python
   - "echo using python : %PYTHON_VERSION% : %PYTHON_ROOT% : %PYTHON_ROOT%\\include : %PYTHON_ROOT%\\libs ; > C:\\Libraries\\boost_1_60_0\\user-config.jam"
   - cd C:\Libraries\boost_1_60_0
-  - bootstrap gcc
-  - bjam --with-system --with-python toolset=gcc python-debugging=off threading=multi variant=release link=static
+  - bootstrap
+  - bjam --with-system --with-python python-debugging=off threading=multi variant=release link=static
   - dir C:\Libraries\boost_1_60_0\stage\lib
 
 build_script:
   - cd c:\projects\gameboycore-python
   - git submodule init
   - git submodule update
-  - set CXX_FLAGS=-std=c++11
-  - python setup.py build --compiler=mingw32
+  - python setup.py build
 
 deploy_script:
   - set HOME=%USERPROFILE%
