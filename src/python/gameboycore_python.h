@@ -23,20 +23,6 @@ public:
         PRESS, RELEASE
     };
 
-    template<class Vector>
-    static boost::python::list vectorToList(const Vector& vec)
-    {
-        auto iter = boost::python::iterator<Vector>()(vec);
-        return boost::python::list(iter);
-    }
-
-    template<class T, int N>
-    static boost::python::list arrayToList(const std::array<T, N>& arr)
-    {
-        std::vector<T> vec(arr.begin(), arr.end());
-        return vectorToList(vec);
-    }
-
     GameboyCorePython()
     {
     }
@@ -122,6 +108,20 @@ private:
                 vblank_callback_();
             }
         }
+    }
+
+    template<class Vector>
+    static boost::python::list vectorToList(const Vector& vec)
+    {
+        auto iter = boost::python::iterator<Vector>()(vec);
+        return boost::python::list(iter);
+    }
+
+    template<class T, int N>
+    static boost::python::list arrayToList(const std::array<T, N>& arr)
+    {
+        std::vector<T> vec(arr.begin(), arr.end());
+        return vectorToList(vec);
     }
 
 private:
