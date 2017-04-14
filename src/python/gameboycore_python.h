@@ -92,6 +92,11 @@ public:
         return vectorToList(this->getGPU()->getBackgroundTileMap());
     }
 
+    std::size_t getBackgroundHash()
+    {
+        return this->getGPU()->getBackgroundHash();
+    }
+
     ~GameboyCorePython()
     {
     }
