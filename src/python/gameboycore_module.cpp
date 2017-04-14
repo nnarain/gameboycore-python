@@ -57,5 +57,6 @@ BOOST_PYTHON_MODULE(gameboycore)
         .def("registerScanlineCallback", &GameboyCorePython::registerScanlineCallback)
         .def("registerVBlankCallback",   &GameboyCorePython::registerVBlankCallback)
         .def("getBackgroundTileMap",     &GameboyCorePython::getBackgroundTileMap)
+        .def("getBackgroundHash",        &GameboyCorePython::getBackgroundHash)
         .def("getSpriteCache",           &GameboyCorePython::getSpriteCache);
 }
