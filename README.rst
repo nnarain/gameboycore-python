@@ -27,7 +27,7 @@ Python Windows Linux
 3.3    N/A     Soon
 3.4    N/A     Soon
 3.5    Yes     Soon
-3.6    Soon    Soon
+3.6    Yes     Soon
 ====== ======= =====
 
 GameboyCore Python does not currently support Python version 2.7 - 3.4 since Visual Studio 9/10 do not support C++11.

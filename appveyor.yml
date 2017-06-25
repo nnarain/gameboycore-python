@@ -49,4 +49,4 @@ deploy_script:
   - echo [server-login] >> %HOME%\\.pypirc
   - echo username:nnarain >> %HOME%\\.pypirc
   - "echo password:%password% >> %HOME%\\.pypirc"
-  - python setup.py sdist bdist_egg bdist_wheel upload
+  - python setup.py bdist_wheel upload
