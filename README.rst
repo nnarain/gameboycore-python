@@ -17,8 +17,8 @@ Installation
 
     pip install gameboycore
 
-Supported Python Version
-------------------------
+Supported Python Versions
+-------------------------
 
 ====== ======= =====
 Python Windows Linux
@@ -30,4 +30,4 @@ Python Windows Linux
 3.6    Yes     Soon
 ====== ======= =====
 
-GameboyCore Python does not currently support Python version 2.7 - 3.4 since Visual Studio 9/10 do not support C++11.
+GameboyCore Python does not currently support Python version 2.7 - 3.4 on Windows since Visual Studio 9/10 do not support C++11.
