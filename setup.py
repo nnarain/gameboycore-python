@@ -117,7 +117,7 @@ readme_file = os.path.join(DIR, 'README.rst')
 
 setup(
     name="gameboycore",
-    version="0.4.2",
+    version="0.4.3",
 
     ext_modules = [gameboycore_module],
 

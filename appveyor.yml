@@ -16,8 +16,16 @@ environment:
   matrix:
     - PYTHON_ROOT: "C:\\Python35"
       PYTHON_VERSION: 3.5
+      ARCH: 32
+    - PYTHON_ROOT: "C:\\Python35-x64"
+      PYTHON_VERSION: 3.5
+      ARCH: 64
     - PYTHON_ROOT: "C:\\Python36"
       PYTHON_VERSION: 3.6
+      ARCH: 32
+    - PYTHON_ROOT: "C:\\Python36-x64"
+      PYTHON_VERSION: 3.6
+      ARCH: 64
 
 init:
   - set PATH=%PYTHON_ROOT%;%PYTHON_ROOT%\Scripts;%PYTHON_ROOT%\Lib;%PATH%
@@ -33,7 +41,7 @@ before_build:
   - "echo using python : %PYTHON_VERSION% : %PYTHON_ROOT% : %PYTHON_ROOT%\\include : %PYTHON_ROOT%\\libs ; > C:\\Libraries\\boost_1_60_0\\user-config.jam"
   - cd %BOOST_ROOT%
   - bootstrap
-  - bjam --with-python python-debugging=off threading=multi variant=release link=static
+  - bjam --with-python python-debugging=off address-model=%ARCH% threading=multi variant=release link=static
   - dir %BOOST_ROOT%\stage\lib
 
 build_script:
