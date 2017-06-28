@@ -17,10 +17,14 @@ python:
 
 env:
   matrix:
-    - PYTHON_VERSION=python2.7
-    - PYTHON_VERSION=python3.3
+    include:
+      - python: 2.7
+        env: PYTHON_VERSION=2.7
+      - python: 3.3
+        env: PYTHON_VERSION=python3.3
 
 before_install:
+- ls /usr/local/lib/
 - git clone --depth=1 https://github.com/nnarain/travis-ci-scripts.git ~/scripts
 - cd ~/scripts/ && ./bootstrap && cd -
 - preinstall_general
