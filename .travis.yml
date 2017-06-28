@@ -20,9 +20,16 @@ before_install:
 - preinstall_general
 - install_boost 1.60.0 linux --with-system --with-python
 - source /opt/boost_1_60_0/setup.bash
+- sudo apt-get install python-dev -qq
+- export PYTHON_ROOT=/usr/local/lib/python$TRAVIS_PYTHON_VERSION
 
 install:
--
+- python --version
+- pip --version
+- pip install wheel
 
 script:
--
+- python setup.py build
+
+after_sucess:
+- python setup.py bdist_wheel
