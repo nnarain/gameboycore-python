@@ -31,5 +31,5 @@ install:
 script:
 - python setup.py build
 
-after_sucess:
+after_success:
 - python setup.py bdist_wheel
