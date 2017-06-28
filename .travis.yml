@@ -1,16 +1,25 @@
 language: cpp
 dist: trusty
 sudo: required
+
 os:
 - linux
+
 compiler:
 - g++
+
 python:
 - '2.7'
 - '3.3'
 - '3.4'
 - '3.5'
 - '3.6'
+
+env:
+  matrix:
+    - PYTHON_VERSION=python2.7
+    - PYTHON_VERSION=python3.3
+
 before_install:
 - git clone --depth=1 https://github.com/nnarain/travis-ci-scripts.git ~/scripts
 - cd ~/scripts/ && ./bootstrap && cd -
@@ -19,14 +28,18 @@ before_install:
 - source /opt/boost_1_60_0/setup.bash
 - sudo apt-get install python-dev -qq
 - export PYTHON_ROOT=/usr/local/lib/python$TRAVIS_PYTHON_VERSION
+
 install:
 - python --version
 - pip --version
 - pip install wheel
+
 script:
 - python setup.py build
+
 after_success:
 - python setup.py bdist_wheel
+
 deploy:
   provider: pypi
   user: nnarain
