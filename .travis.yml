@@ -34,7 +34,7 @@ before_install:
 - sudo apt-get install python-dev -qq
 
 install:
-- export PATH=$PYTHON_ROOT:$PATH
+- export PATH=$PYTHON_ROOT/bin:$PYTHON_ROOT/lib:$PATH
 - python --version
 - pip --version
 - pip install wheel
