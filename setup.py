@@ -77,9 +77,9 @@ for current_dir, dirs, files in os.walk(os.path.join(DIR, 'src')):
 
 endianness = '__LITTLEENDIAN__' if sys.byteorder == 'little' else '__BIGENDIAN__'
 
-cxx_flags = ''
+cxx_flags = []
 if platform.system() == 'Linux':
-    cxx_flags = '-std=c++11'
+    cxx_flags = ['-std=c++11','-Wno-format-security']
 
 print('== GameboyCore Configuration ==')
 print('-- INCLUDE_DIR: %s' % GAMEBOYCORE_INCLUDE_DIR)
@@ -110,7 +110,7 @@ gameboycore_module = Extension(
 
     sources = sources,
 
-    extra_compile_args=[cxx_flags]
+    extra_compile_args = cxx_flags
 )
 
 readme_file = os.path.join(DIR, 'README.rst')

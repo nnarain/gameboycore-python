@@ -104,7 +104,7 @@ public:
 private:
     void scanlineCallback(const gb::GPU::Scanline& scanline, int line)
     {
-        scanline_callback_(arrayToList(scanline), line);
+        scanline_callback_(arrayToList<gb::Pixel, 160>(scanline), line);
 
         if(line == 143)
         {
