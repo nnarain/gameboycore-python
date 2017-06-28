@@ -23,7 +23,7 @@ matrix:
       env: PYTHON_ROOT=/usr/local/lib/python3.3
 
 before_install:
-- ls /usr/local/lib/
+- ls /opt/python
 - echo $TRAVIS_PYTHON_VERSION
 - git clone --depth=1 https://github.com/nnarain/travis-ci-scripts.git ~/scripts
 - cd ~/scripts/ && ./bootstrap && cd -
