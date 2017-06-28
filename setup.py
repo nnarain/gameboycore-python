@@ -79,7 +79,7 @@ endianness = '__LITTLEENDIAN__' if sys.byteorder == 'little' else '__BIGENDIAN__
 
 cxx_flags = ''
 if platform.system() == 'Linux':
-    cxx_flags = '-std=c++11'
+    cxx_flags = '-std=c++11 -Wno-format-security'
 
 print('== GameboyCore Configuration ==')
 print('-- INCLUDE_DIR: %s' % GAMEBOYCORE_INCLUDE_DIR)
