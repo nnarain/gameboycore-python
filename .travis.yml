@@ -9,29 +9,28 @@ compiler:
 - g++
 
 python:
-- '2.7'
-- '3.3'
-- '3.4'
-- '3.5'
-- '3.6'
+- "2.7"
+- "3.3"
+- "3.4"
+- "3.5"
+- "3.6"
 
-env:
-  matrix:
-    include:
-      - python: 2.7
-        env: PYTHON_VERSION=2.7
-      - python: 3.3
-        env: PYTHON_VERSION=python3.3
+matrix:
+  include:
+    - python: 2.7
+      env: PYTHON_ROOT=/usr/local/lib/python2.7
+    - python: 3.3
+      env: PYTHON_ROOT=/usr/local/lib/python3.3
 
 before_install:
 - ls /usr/local/lib/
+- echo $TRAVIS_PYTHON_VERSION
 - git clone --depth=1 https://github.com/nnarain/travis-ci-scripts.git ~/scripts
 - cd ~/scripts/ && ./bootstrap && cd -
 - preinstall_general
 - install_boost 1.60.0 linux --with-system --with-python
 - source /opt/boost_1_60_0/setup.bash
 - sudo apt-get install python-dev -qq
-- export PYTHON_ROOT=/usr/local/lib/$PYTHON_VERSION
 
 install:
 - python --version
