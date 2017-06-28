@@ -1,0 +1,28 @@
+language: cpp
+dist: trusty
+sudo: required
+
+os:
+- linux
+compiler:
+- g++
+
+python:
+- "2.7"
+- "3.3"
+- "3.4"
+- "3.5"
+- "3.6"
+
+before_install:
+- git clone --depth=1 https://github.com/nnarain/travis-ci-scripts.git ~/scripts
+- cd ~/scripts/ && ./bootstrap && cd -
+- preinstall_general
+- install_boost 1.60.0 linux --with-system --with-python
+- source /opt/boost_1_60_0/setup.bash
+
+install:
+-
+
+script:
+-
