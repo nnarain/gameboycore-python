@@ -18,9 +18,9 @@ python:
 matrix:
   include:
     - python: 2.7
-      env: PYTHON_ROOT=/usr/local/lib/python2.7
+      env: PYTHON_ROOT=/opt/python/2.7
     - python: 3.3
-      env: PYTHON_ROOT=/usr/local/lib/python3.3
+      env: PYTHON_ROOT=/opt/python/3.3
 
 before_install:
 - ls /opt/python
@@ -33,6 +33,7 @@ before_install:
 - sudo apt-get install python-dev -qq
 
 install:
+- export PATH=$PYTHON_ROOT:$PATH
 - python --version
 - pip --version
 - pip install wheel
