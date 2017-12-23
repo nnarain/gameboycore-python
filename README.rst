@@ -1,6 +1,9 @@
 Gameboy Core Python
 ===================
 
+.. image:: https://travis-ci.org/nnarain/gameboycore-python.svg?branch=linux-build-fixes
+    :target: https://travis-ci.org/nnarain/gameboycore-python
+
 .. image:: https://ci.appveyor.com/api/projects/status/hatnihg8ii76hc27?svg=true
     :target: https://ci.appveyor.com/project/nnarain/gameboycore-python
 
@@ -15,7 +18,15 @@ Python Bindings for `GameboyCore <https://github.com/nnarain/gameboycore>`_
 Installation
 ------------
 
+On Windows:
+
     pip install gameboycore
+
+On Linux:
+
+    easy_install gameboycore
+
+Linux uses `easy_install` because PyPi does not accept `.whl` files and `pip` cannot install `.egg` files.
 
 Supported Python Versions
 -------------------------
