@@ -11,6 +11,7 @@ from __future__ import print_function
 import os
 import sys
 import platform
+import sysconfig
 
 from setuptools import setup
 from setuptools.extension import Extension
@@ -43,18 +44,20 @@ print('-- BOOST_LIB_DIR_EXTRA: %s' % BOOST_LIB_DIR_EXTRA)
 print('')
 
 #== Python Configuration ==
-try:
-    PYTHON_ROOT = os.environ['PYTHON_ROOT']
-except KeyError as e:
-    print (('Error: PYTHON_ROOT is not set'))
-    exit(1)
-PYTHON_INCLUDE_DIR = os.path.join(PYTHON_ROOT, 'include')
-PYTHON_LIB_DIR = os.path.join(PYTHON_ROOT, 'libs')
+pyconfig = sysconfig.get_paths()
+PYTHON_ROOT = pyconfig['data']
+PYTHON_INCLUDE_DIR = pyconfig['include']
+PYTHON_LIB_DIR_LINUX = pyconfig['stdlib']
+PYTHON_LIB_DIR_WIN32 = os.path.join(PYTHON_ROOT, 'libs')
+
+pyversion = "{0}.{1}".format(sys.version_info[0], sys.version_info[1])
 
 print('== Python Configuration ==')
-print('PYTHON_ROOT:        %s' % PYTHON_ROOT)
-print('PYTHON_INCLUDE_DIR: %s' % PYTHON_INCLUDE_DIR)
-print('PYTHON_LIB_DIR:     %s' % PYTHON_LIB_DIR)
+print('Python Version:           %s' % pyversion)
+print('PYTHON_ROOT:              %s' % PYTHON_ROOT)
+print('PYTHON_INCLUDE_DIR:       %s' % PYTHON_INCLUDE_DIR)
+print('PYTHON_LIB_DIR_LINUX:     %s' % PYTHON_LIB_DIR_LINUX)
+print('PYTHON_LIB_DIR_WIN32:     %s' % PYTHON_LIB_DIR_WIN32)
 print('')
 
 #== GameboyCore Configuration ==
@@ -78,8 +81,10 @@ for current_dir, dirs, files in os.walk(os.path.join(DIR, 'src')):
 endianness = '__LITTLEENDIAN__' if sys.byteorder == 'little' else '__BIGENDIAN__'
 
 cxx_flags = []
+link_flags = []
 if platform.system() == 'Linux':
     cxx_flags = ['-std=c++11','-Wno-format-security']
+    link_flags = ['-lboost_python']
 
 print('== GameboyCore Configuration ==')
 print('-- INCLUDE_DIR: %s' % GAMEBOYCORE_INCLUDE_DIR)
@@ -104,20 +109,24 @@ gameboycore_module = Extension(
 
     library_dirs = [
         BOOST_LIB_DIR,
-        PYTHON_LIB_DIR,
+        PYTHON_LIB_DIR_LINUX,
+        PYTHON_LIB_DIR_WIN32,
         BOOST_LIB_DIR_EXTRA
     ],
 
+    libraries = ['boost_python'],
+
     sources = sources,
 
-    extra_compile_args = cxx_flags
+    extra_compile_args = cxx_flags,
+    extra_link_args = link_flags
 )
 
 readme_file = os.path.join(DIR, 'README.rst')
 
 setup(
     name="gameboycore",
-    version="0.4.4",
+    version="0.4.5",
 
     ext_modules = [gameboycore_module],
 
