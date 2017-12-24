@@ -84,7 +84,7 @@ cxx_flags = []
 link_flags = []
 if platform.system() == 'Linux':
     cxx_flags = ['-std=c++11','-Wno-format-security']
-    link_flags = ['-l:%s' % os.path.join(BOOST_LIB_DIR, 'libboost_python.a')]
+    link_flags = ['-lboost_python']
 
 print('== GameboyCore Configuration ==')
 print('-- INCLUDE_DIR: %s' % GAMEBOYCORE_INCLUDE_DIR)
