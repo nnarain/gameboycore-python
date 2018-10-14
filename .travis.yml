@@ -1,50 +1,49 @@
-language: cpp
+language: python
 dist: trusty
 sudo: required
 
 os:
 - linux
 
-compiler:
-- g++
-
-python:
-- "2.7"
-- "3.3"
-- "3.4"
-- "3.5"
-- "3.6"
+# python:
+# - "2.7"
+# - "3.3"
+# - "3.4"
+# - "3.5"
+# - "3.6"
 
 matrix:
   include:
-    - python: 2.7
-      env: PYTHON_ROOT=/opt/python/2.7
-    - python: 3.3
-      env: PYTHON_ROOT=/opt/python/3.3
-    - python: 3.4
-      env: PYTHON_ROOT=/opt/python/3.4
-    - python: 3.5
-      env: PYTHON_ROOT=/opt/python/3.5
-    - python: 3.6
-      env: PYTHON_ROOT=/opt/python/3.6
+    - python: "2.7"
+      env: PYTHON_INCLUDE_PATH=/usr/include/python2.7
+    - python: "3.3"
+      env: PYTHON_INCLUDE_PATH=/usr/include/python3.4m
+    - python: "3.4"
+      env: PYTHON_INCLUDE_PATH=/usr/include/python3.4m
+    - python: "3.5"
+      env: PYTHON_INCLUDE_PATH=/usr/include/python3.5m
+    - python: "3.6"
+      env: PYTHON_INCLUDE_PATH=/usr/include/python3.5m
 
 before_install:
-- echo $TRAVIS_PYTHON_VERSION
+- export CPLUS_INCLUDE_PATH=$CPLUS_INCLUDE_PATH:$PYTHON_INCLUDE_PATH
 - git clone --depth=1 https://github.com/nnarain/travis-ci-scripts.git ~/scripts
 - cd ~/scripts/ && ./bootstrap && cd -
 - preinstall_general
+- sudo apt-get install python-dev python3-dev python3.5-dev -qq
 - install_boost 1.60.0 linux --with-system --with-python
 - source /opt/boost_1_60_0/setup.bash
-- sudo apt-get install python-dev -qq
 
 install:
-- export PATH=$PYTHON_ROOT/bin:$PYTHON_ROOT/lib:$PATH
+- export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$BOOST_ROOT/stage/lib
 - python --version
 - pip --version
 - pip install wheel
+- pip install nose
 
 script:
-- python setup.py build
+- python setup.py install
+- nosetests -v -w ./tests
 
 after_success:
 - python setup.py bdist_egg
