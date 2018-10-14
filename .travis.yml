@@ -1,23 +1,20 @@
 language: python
 dist: trusty
 sudo: required
-
 os:
 - linux
-
 matrix:
   include:
-    - python: "2.7"
-      env: PYTHON_INCLUDE_PATH=/usr/include/python2.7
-    - python: "3.3"
-      env: PYTHON_INCLUDE_PATH=/usr/include/python3.4m
-    - python: "3.4"
-      env: PYTHON_INCLUDE_PATH=/usr/include/python3.4m
-    - python: "3.5"
-      env: PYTHON_INCLUDE_PATH=/usr/include/python3.5m
-    - python: "3.6"
-      env: PYTHON_INCLUDE_PATH=/usr/include/python3.5m
-
+  - python: '2.7'
+    env: PYTHON_INCLUDE_PATH=/usr/include/python2.7
+  - python: '3.3'
+    env: PYTHON_INCLUDE_PATH=/usr/include/python3.4m
+  - python: '3.4'
+    env: PYTHON_INCLUDE_PATH=/usr/include/python3.4m
+  - python: '3.5'
+    env: PYTHON_INCLUDE_PATH=/usr/include/python3.5m
+  - python: '3.6'
+    env: PYTHON_INCLUDE_PATH=/usr/include/python3.5m
 before_install:
 - export CPLUS_INCLUDE_PATH=$CPLUS_INCLUDE_PATH:$PYTHON_INCLUDE_PATH
 - git clone --depth=1 https://github.com/nnarain/travis-ci-scripts.git ~/scripts
@@ -26,24 +23,20 @@ before_install:
 - sudo apt-get install python-dev python3-dev python3.5-dev -qq
 - install_boost 1.60.0 linux --with-system --with-python
 - source /opt/boost_1_60_0/setup.bash
-
 install:
 - export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$BOOST_ROOT/stage/lib
 - python --version
 - pip --version
 - pip install wheel
 - pip install nose
-
 script:
 - python setup.py install
 - nosetests -v -w ./tests
-
 after_success:
 - python setup.py bdist_egg
-
 deploy:
   provider: pypi
   user: nnarain
   password:
-    secure: IWA+Hir8il0zEmOzaVylb8GzgW961uel5PfGP1ezmY2eE5UtVw+XifVgWiW5+4JMWP8bPWcLu2sZtdKet2+JXjuCVFjkzCTCMJ/a9u+RwJ66KEcivoW0KLVOM8CyqqIh2c5ol7SLI6AqtpBq1C9VbWd7N7hLkf5TA+4XxybB77O/fsZrBBatFmDrbcISlq23kjdTjY+TF0p3EKzZtQ2RJ08rnLnnjWaZXg0b3AjddaY0MD51D0yiDsLgg070gttHSqYwV15ppqzbBDEtzForMlAcp32+oqo6GJZFd86PbbsyhnubIcfar4giONZE/ZngrE4gMR1NzIh9jtpP64IHM3+D13up0Pizn7p7abE8VH9xHqjIEWzw9LhGshEL4HcA5JdMQEvF0PPQoFbfanbtnaDE/d7snbByMuXVXfxB4RICXsB9S2vzMROCklYP45lL0uibVRpeqymJZowT8XBPTw9mLeLAKLC6xYvkdPmOe4gGAr/mxX6kVyrxywDXCX0Q98CbKl5Lw3E1mg0xYhRVelEO7+U2CGRwbfuKt8QdZkQl5CfYA6d0qYpwsl0Rg8RAVsvm8NZR11Xktmc4Ao8T6ZI+yc3hvU0sHmmHV48SEfdKfV3QpV7cv0NypuZ93aifZ4074Q/f2ik03LEz0gH4icp6o4W4NzUr4Bwms/tuXbc=
-  distributions: "bdist_egg"
+    secure: AxAqP6HNSijVIC0AOu7Jnuy6fZ3fp8C9oBsJvq2s16ezrMKpuUP96QlmIErE1nkxqfu3dt2lQ8P1jMm8r77zIZQnniLoiJlAOihm8WIVw9BskLn33PbHeLi7pA9hZigo4KUuxasdomwCDLxeBH4gFJnlN/qK6XZx4iH9mGBdDlz5PDJ4d1EFOBCBA/A3+r61l2euyHuGwYkSDqcJUlQaOKhMlufVG0vIcPf1kXBFNxVbbpHUdB5XufKh+ET4eImUQXQ5ZpuJf6+QYFXvDFm6wyV6haeOlUlT33t1ZkONTKRCsnVonX+Pj4MDntPu3aLarzCotBhwhERTxmWmr95MxBZsXE+pr0futFIZDCMWa1HwHkiTVmsAxwprihEODZ2cLIzp69RPmHsfTJfCUzgR9lvTeOuKQ5SQ5v/nz1GiGduBxf9yRHDFfacbkiAH6GxtB17QUtEl6l+AkDXy4j8Z4ylYbNVNPApcGhxSvSnJi54FgkITtsOxNPkE10SXkDKJDfUpDT5Sxf8aGEYhy8ZDl1pAV2m9sImRRcAt1GSfJrloR77qYjnrgEhrvvQ3FSKMy37HmkwLAq7evZqYDrglQ6hd2JH06vWkuJKC4lAoXrzui6c7mgM+fY1lrkjAT1lVMem0/SLjpYlHZJYBYvTwMOzqNzR/VgQQN1NZyavNoZk=
+  distributions: bdist_egg
