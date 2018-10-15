@@ -12,6 +12,7 @@ import os
 import sys
 import platform
 
+import setuptools
 from setuptools import setup
 from setuptools.extension import Extension
 from setuptools.command.build_ext import build_ext
@@ -136,7 +137,7 @@ readme_file = os.path.join(DIR, 'README.rst')
 
 setup(
     name="gameboycore",
-    version="0.5.0",
+    version="0.5.1",
 
     ext_modules = [gameboycore_module],
     cmdclass = {'build_ext': BuildExt},
