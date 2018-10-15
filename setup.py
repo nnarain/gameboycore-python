@@ -11,56 +11,24 @@ from __future__ import print_function
 import os
 import sys
 import platform
-import sysconfig
 
 from setuptools import setup
 from setuptools.extension import Extension
+from setuptools.command.build_ext import build_ext
 
-def getenv(env_var, default_value):
-    try:
-        return os.environ[env_var]
-    except KeyError as e:
-        return default_value
 
-# get this directory
-DIR = os.path.dirname(os.path.realpath(__file__))
-
-#== Boost Configuration ==
-try:
-    BOOST_ROOT = os.environ['BOOST_ROOT']
-except KeyError as e:
-    print(('Error: BOOST_ROOT is not set'))
-    exit(1)
-
-BOOST_INCLUDE_DIR   = BOOST_ROOT
-BOOST_LIB_DIR       = os.path.join(BOOST_ROOT, 'stage', 'lib')
-BOOST_LIB_DIR_EXTRA = os.path.join(BOOST_ROOT, getenv('BOOST_LIB_DIR', ''))
-
-print('== Boost Configuration ==')
-print('-- BOOST_ROOT:          %s' % BOOST_ROOT)
-print('-- BOOST_INCLUDE_DIR:   %s' % BOOST_INCLUDE_DIR)
-print('-- BOOST_LIB_DIR:       %s' % BOOST_LIB_DIR)
-print('-- BOOST_LIB_DIR_EXTRA: %s' % BOOST_LIB_DIR_EXTRA)
-print('')
-
-#== Python Configuration ==
-pyconfig = sysconfig.get_paths()
-PYTHON_ROOT = pyconfig['data']
-PYTHON_INCLUDE_DIR = pyconfig['include']
-PYTHON_LIB_DIR_LINUX = pyconfig['stdlib']
-PYTHON_LIB_DIR_WIN32 = os.path.join(PYTHON_ROOT, 'libs')
-
-pyversion = "{0}.{1}".format(sys.version_info[0], sys.version_info[1])
-
-print('== Python Configuration ==')
-print('Python Version:           %s' % pyversion)
-print('PYTHON_ROOT:              %s' % PYTHON_ROOT)
-print('PYTHON_INCLUDE_DIR:       %s' % PYTHON_INCLUDE_DIR)
-print('PYTHON_LIB_DIR_LINUX:     %s' % PYTHON_LIB_DIR_LINUX)
-print('PYTHON_LIB_DIR_WIN32:     %s' % PYTHON_LIB_DIR_WIN32)
-print('')
+class get_pybind_include(object):
+    """Helper to get pybind11 include directory"""
+    def __init__(self, user=False):
+        self.user = user
+    
+    def __str__(self):
+        import pybind11
+        return pybind11.get_include(self.user)
 
 #== GameboyCore Configuration ==
+# get this directory
+DIR = os.path.dirname(os.path.realpath(__file__))
 
 GAMEBOYCORE_INCLUDE_DIR = os.path.join(DIR, 'src', 'gameboycore', 'include')
 
@@ -81,10 +49,8 @@ for current_dir, dirs, files in os.walk(os.path.join(DIR, 'src')):
 endianness = '__LITTLEENDIAN__' if sys.byteorder == 'little' else '__BIGENDIAN__'
 
 cxx_flags = []
-link_flags = []
 if platform.system() == 'Linux':
-    cxx_flags = ['-std=c++11','-Wno-format-security']
-    link_flags = ['-lboost_python']
+    cxx_flags = ['-Wno-format-security']
 
 print('== GameboyCore Configuration ==')
 print('-- INCLUDE_DIR: %s' % GAMEBOYCORE_INCLUDE_DIR)
@@ -99,36 +65,83 @@ gameboycore_module = Extension(
     'gameboycore',
     define_macros = [
         (endianness,''),
-        ('GAMEBOYCORE_STATIC', '')
+        ('GAMEBOYCORE_STATIC', ''),
+        ('_CRT_SECURE_NO_WARNINGS', '')
     ],
     include_dirs = [
-        PYTHON_INCLUDE_DIR,
-        BOOST_INCLUDE_DIR,
+        get_pybind_include(),
+        get_pybind_include(user=True),
         GAMEBOYCORE_INCLUDE_DIR
     ],
 
-    library_dirs = [
-        BOOST_LIB_DIR,
-        PYTHON_LIB_DIR_LINUX,
-        PYTHON_LIB_DIR_WIN32,
-        BOOST_LIB_DIR_EXTRA
-    ],
-
-    libraries = ['boost_python'],
-
     sources = sources,
 
-    extra_compile_args = cxx_flags,
-    extra_link_args = link_flags
+    extra_compile_args = cxx_flags
 )
+
+# From https://github.com/pybind/python_example/blob/master/setup.py
+
+# As of Python 3.6, CCompiler has a `has_flag` method.
+# cf http://bugs.python.org/issue26689
+def has_flag(compiler, flagname):
+    """Return a boolean indicating whether a flag name is supported on
+    the specified compiler.
+    """
+    import tempfile
+    with tempfile.NamedTemporaryFile('w', suffix='.cpp') as f:
+        f.write('int main (int argc, char **argv) { return 0; }')
+        try:
+            compiler.compile([f.name], extra_postargs=[flagname])
+        except setuptools.distutils.errors.CompileError:
+            return False
+    return True
+
+
+def cpp_flag(compiler):
+    """Return the -std=c++[11/14] compiler flag.
+    The c++14 is prefered over c++11 (when it is available).
+    """
+    if has_flag(compiler, '-std=c++14'):
+        return '-std=c++14'
+    elif has_flag(compiler, '-std=c++11'):
+        return '-std=c++11'
+    else:
+        raise RuntimeError('Unsupported compiler -- at least C++11 support is needed!')
+
+class BuildExt(build_ext):
+    """A custom build extension for adding compiler-specific options."""
+    c_opts = {
+        'msvc': ['/EHsc'],
+        'unix': [],
+    }
+
+    if sys.platform == 'darwin':
+        c_opts['unix'] += ['-stdlib=libc++', '-mmacosx-version-min=10.7']
+
+    def build_extensions(self):
+        ct = self.compiler.compiler_type
+        opts = self.c_opts.get(ct, [])
+        if ct == 'unix':
+            opts.append('-DVERSION_INFO="%s"' % self.distribution.get_version())
+            opts.append(cpp_flag(self.compiler))
+            if has_flag(self.compiler, '-fvisibility=hidden'):
+                opts.append('-fvisibility=hidden')
+        elif ct == 'msvc':
+            opts.append('/DVERSION_INFO=\\"%s\\"' % self.distribution.get_version())
+        for ext in self.extensions:
+            ext.extra_compile_args.extend(opts)
+        build_ext.build_extensions(self)
 
 readme_file = os.path.join(DIR, 'README.rst')
 
 setup(
     name="gameboycore",
-    version="0.4.5",
+    version="0.5.0",
 
     ext_modules = [gameboycore_module],
+    cmdclass = {'build_ext': BuildExt},
+
+    install_requires=['pybind11 >= 2.2'],
 
     # Authoring Information
     author="Natesh Narain",

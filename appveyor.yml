@@ -7,11 +7,8 @@ branches:
     - master
 
 environment:
-  BOOST_ROOT: C:\Libraries\boost_1_60_0
-  BOOST_LIB_DIR: lib32-msvc-14.0
-
   password:
-    secure: bkWnSpT47YhbxGA3RUIBTcvQOPbPG5ziYsQtLOE1L/c=
+    secure: VQENOcOB+fwiDwZ+Ojntvw==
 
   matrix:
     - PYTHON_ROOT: "C:\\Python35"
@@ -35,20 +32,13 @@ install:
   - pip --version
   - pip install setuptools --upgrade
   - pip install wheel
-
-before_build:
-  - cd c:\projects\gameboycore-python
-  - "echo using python : %PYTHON_VERSION% : %PYTHON_ROOT% : %PYTHON_ROOT%\\include : %PYTHON_ROOT%\\libs ; > C:\\Libraries\\boost_1_60_0\\user-config.jam"
-  - cd %BOOST_ROOT%
-  - bootstrap
-  - bjam --with-python python-debugging=off address-model=%ARCH% threading=multi variant=release link=static
-  - dir %BOOST_ROOT%\stage\lib
+  - pip install nose
 
 build_script:
   - cd c:\projects\gameboycore-python
-  - git submodule init
-  - git submodule update
-  - python setup.py build
+  - git submodule init && git submodule update
+  - pip install -e .
+  - nosetests -v -w tests
 
 deploy_script:
   - set HOME=%USERPROFILE%

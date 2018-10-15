@@ -24,9 +24,12 @@ On Windows:
 
 On Linux:
 
-    easy_install gameboycore
+    git clone https://github.com/nnarain/gameboycore-python
+    cd gameboycore-python
+    
+    pip install -e .
 
-Linux uses `easy_install` because PyPi does not accept `.whl` files and `pip` cannot install `.egg` files.
+Linux uses a source installation because PyPi does not accept `.whl` files and `pip` cannot install `.egg` files.
 
 See online docs for installation from source instructions.
 

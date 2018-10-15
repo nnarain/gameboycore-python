@@ -1,15 +1,15 @@
 #ifndef GAMEBOYCORE_PYTHON_H
 #define GAMEBOYCORE_PYTHON_H
 
-#include <boost/python.hpp>
+#include <pybind11/pybind11.h>
 
 #include <gameboycore/gameboycore.h>
 #include <fstream>
 #include <vector>
 #include <array>
 #include <functional>
-#include <iostream>
 #include <cstdint>
+#include <stdexcept>
 
 class GameboyCorePython : public gb::GameboyCore
 {
@@ -27,7 +27,7 @@ public:
     {
     }
 
-    void registerScanlineCallback(boost::python::object callable)
+    void registerScanlineCallback(pybind11::object callable)
     {
         if(PyCallable_Check(callable.ptr()))
         {
@@ -39,11 +39,11 @@ public:
         else
         {
             PyErr_SetString(PyExc_TypeError, "Object is not callable");
-            boost::python::throw_error_already_set();
+            throw std::runtime_error("Object is not callable");
         }
     }
 
-    void registerVBlankCallback(boost::python::object callable)
+    void registerVBlankCallback(pybind11::object callable)
     {
         if(PyCallable_Check(callable.ptr()))
         {
@@ -52,7 +52,7 @@ public:
         else
         {
             PyErr_SetString(PyExc_TypeError, "Object is not callable");
-            boost::python::throw_error_already_set();
+            throw std::runtime_error("Object is not callable");
         }
     }
 
@@ -82,14 +82,14 @@ public:
         this->loadROM(&buffer[0], size);
     }
 
-    boost::python::list getSpriteCache()
+    SpriteList getSpriteCache()
     {
-        return vectorToList(this->getGPU()->getSpriteCache());
+        return this->getGPU()->getSpriteCache();
     }
 
-    boost::python::list getBackgroundTileMap()
+    ByteList getBackgroundTileMap()
     {
-        return vectorToList(this->getGPU()->getBackgroundTileMap());
+        return this->getGPU()->getBackgroundTileMap();
     }
 
     std::size_t getBackgroundHash()
@@ -104,7 +104,8 @@ public:
 private:
     void scanlineCallback(const gb::GPU::Scanline& scanline, int line)
     {
-        scanline_callback_(arrayToList<gb::Pixel, 160>(scanline), line);
+        auto list = arrayToList<gb::Pixel, 160>(scanline);
+        scanline_callback_(list, line);
 
         if(line == 143)
         {
@@ -115,23 +116,16 @@ private:
         }
     }
 
-    template<class Vector>
-    static boost::python::list vectorToList(const Vector& vec)
-    {
-        auto iter = boost::python::iterator<Vector>()(vec);
-        return boost::python::list(iter);
-    }
-
     template<class T, int N>
-    static boost::python::list arrayToList(const std::array<T, N>& arr)
+    static std::vector<T> arrayToList(const std::array<T, N>& arr)
     {
         std::vector<T> vec(arr.begin(), arr.end());
-        return vectorToList(vec);
+        return vec;
     }
 
 private:
-    boost::python::object scanline_callback_;
-    boost::python::object vblank_callback_;
+    pybind11::object scanline_callback_;
+    pybind11::object vblank_callback_;
 };
 
 #endif // GAMEBOYCORE_PYTHON_H
