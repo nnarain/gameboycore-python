@@ -1,39 +1,36 @@
 language: python
 dist: trusty
 sudo: required
+
 os:
-- linux
-matrix:
-  include:
-  - python: '2.7'
-    env: PYTHON_INCLUDE_PATH=/usr/include/python2.7
-  - python: '3.3'
-    env: PYTHON_INCLUDE_PATH=/usr/include/python3.4m
-  - python: '3.4'
-    env: PYTHON_INCLUDE_PATH=/usr/include/python3.4m
-  - python: '3.5'
-    env: PYTHON_INCLUDE_PATH=/usr/include/python3.5m
-  - python: '3.6'
-    env: PYTHON_INCLUDE_PATH=/usr/include/python3.5m
+  - linux
+
+python:
+  - "2.7"
+  - "3.3"
+  - "3.4"
+  - "3.5"
+  - "3.6"
+
+compiler: g++
+
 before_install:
-- export CPLUS_INCLUDE_PATH=$CPLUS_INCLUDE_PATH:$PYTHON_INCLUDE_PATH
-- git clone --depth=1 https://github.com/nnarain/travis-ci-scripts.git ~/scripts
-- cd ~/scripts/ && ./bootstrap && cd -
-- preinstall_general
-- sudo apt-get install python-dev python3-dev python3.5-dev -qq
-- install_boost 1.60.0 linux --with-system --with-python
-- source /opt/boost_1_60_0/setup.bash
+  - sudo add-apt-repository ppa:ubuntu-toolchain-r/test -y && sudo apt-get update
+  - sudo apt-get install build-essential g++-7 -qq -y
+
 install:
-- export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$BOOST_ROOT/stage/lib
-- python --version
-- pip --version
-- pip install wheel
-- pip install nose
+  - python --version
+  - pip --version
+  - pip install wheel
+  - pip install nose
+
 script:
-- python setup.py install
-- nosetests -v -w ./tests
+  - pip install -e .
+  - nosetests -v -w ./tests
+
 after_success:
-- python setup.py bdist_egg
+  - python setup.py bdist_egg
+
 deploy:
   provider: pypi
   user: nnarain
