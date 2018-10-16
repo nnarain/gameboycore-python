@@ -24,18 +24,21 @@ class get_pybind_include(object):
         self.user = user
     
     def __str__(self):
-        import pybind11
-        return pybind11.get_include(self.user)
+        try:
+            import pybind11
+            return pybind11.get_include(self.user)
+        except:
+            return ''
 
 #== GameboyCore Configuration ==
 # get this directory
 DIR = os.path.dirname(os.path.realpath(__file__))
 
-GAMEBOYCORE_INCLUDE_DIR = os.path.join(DIR, 'src', 'gameboycore', 'include')
+GAMEBOYCORE_INCLUDE_DIR = os.path.join('src', 'gameboycore', 'include')
 
 # collect sources
 sources = []
-for current_dir, dirs, files in os.walk(os.path.join(DIR, 'src')):
+for current_dir, dirs, files in os.walk('src'):
     # skip test code
     if 'tests' in dirs:
         dirs.remove('tests')
@@ -45,7 +48,8 @@ for current_dir, dirs, files in os.walk(os.path.join(DIR, 'src')):
     for f in files:
         ext = os.path.splitext(f)[1]
         if ext == '.cpp':
-            sources.append(os.path.join(current_dir, f))
+            filepath = os.path.join(current_dir, f)
+            sources.append(os.path.relpath(filepath, DIR))
 
 endianness = '__LITTLEENDIAN__' if sys.byteorder == 'little' else '__BIGENDIAN__'
 
@@ -137,7 +141,7 @@ readme_file = os.path.join(DIR, 'README.rst')
 
 setup(
     name="gameboycore",
-    version="0.5.2",
+    version="0.5.3",
 
     ext_modules = [gameboycore_module],
     cmdclass = {'build_ext': BuildExt},
