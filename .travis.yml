@@ -28,7 +28,10 @@ script:
   - nosetests -v -w ./tests
 
 after_success:
-  - python setup.py bdist_egg
+  - python setup.py sdist
+
+# Only deploy for python 2.7
+before_deploy: if [[ $TRAVIS_PYTHON_VERSION != 2.7 ]]; then travis_terminate 0; fi
 
 deploy:
   provider: pypi
