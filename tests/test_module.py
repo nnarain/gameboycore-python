@@ -1,7 +1,7 @@
 import unittest
 
 
-class TestBasicUsage(unittest.TestCase):
+class TestModule(unittest.TestCase):
     """
     Test basic usage of the module
     """

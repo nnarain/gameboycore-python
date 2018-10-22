@@ -32,9 +32,6 @@ public:
         if(PyCallable_Check(callable.ptr()))
         {
             scanline_callback_ = callable;
-            this->getGPU()->setRenderCallback(
-                std::bind(&GameboyCorePython::scanlineCallback, this, std::placeholders::_1, std::placeholders::_2)
-            );
         }
         else
         {
@@ -70,16 +67,21 @@ public:
 
     void open(const std::string& rom_file)
     {
+        // open file, and seek to end
         std::ifstream file(rom_file, std::ios::binary | std::ios::ate);
+        // get file size
         auto size = file.tellg();
-
+        // create a buffer for the file
         std::vector<uint8_t> buffer;
         buffer.resize(size);
-
+        // seek to begin and read file into buffer
         file.seekg(0, std::ios::beg);
         file.read((char*)&buffer[0], size);
-
+        // load ROM
         this->loadROM(&buffer[0], size);
+
+        // setup callbacks
+        setupCallbacks();
     }
 
     SpriteList getSpriteCache()
@@ -114,6 +116,13 @@ private:
                 vblank_callback_();
             }
         }
+    }
+
+    void setupCallbacks()
+    {
+        this->getGPU()->setRenderCallback(
+            std::bind(&GameboyCorePython::scanlineCallback, this, std::placeholders::_1, std::placeholders::_2)
+        );
     }
 
     template<class T, int N>

@@ -54,6 +54,7 @@ PYBIND11_MODULE(gameboycore, m) {
         .def("open",                       &GameboyCorePython::open)
         .def("input",                      &GameboyCorePython::input)
         .def("update",                     &GameboyCorePython::update)
+        .def("emulate_frame",              &GameboyCorePython::emulateFrame)
         .def("register_scanline_callback", &GameboyCorePython::registerScanlineCallback)
         .def("register_vblank_callback",   &GameboyCorePython::registerVBlankCallback)
         .def("get_background_hash",        &GameboyCorePython::getBackgroundHash)
