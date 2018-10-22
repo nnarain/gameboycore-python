@@ -10,6 +10,12 @@ class TestEmulation(TestCase):
         self.vblank_fired = False
         self.scanline_count = 0
 
+    def test_emulate_frame(self):
+        """
+        Test emulating a single frame
+        """
+        self.core.emulate_frame()
+
     def test_scanline_callback(self):
         """
         Test that the scanline callback returns the correct number of lines
