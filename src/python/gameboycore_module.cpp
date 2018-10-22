@@ -62,6 +62,7 @@ PYBIND11_MODULE(gameboycore, m) {
         .def("emulate_frame",              &GameboyCorePython::emulateFrame)
         .def("register_scanline_callback", &GameboyCorePython::registerScanlineCallback)
         .def("register_vblank_callback",   &GameboyCorePython::registerVBlankCallback)
+        .def("register_audio_callback",    &GameboyCorePython::registerAudioCallback)
         .def("get_background_hash",        &GameboyCorePython::getBackgroundHash)
         .def("get_background_tilemap",     &GameboyCorePython::getBackgroundTileMap)
         .def("get_sprite_cache",           &GameboyCorePython::getSpriteCache)

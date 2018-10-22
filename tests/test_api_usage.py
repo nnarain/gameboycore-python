@@ -36,3 +36,19 @@ class TestAPI(TestCase):
         scanline_callback = 0
         with self.assertRaises(RuntimeError) as ctx:
             self.core.register_scanline_callback(scanline_callback)
+
+    def test_register_audio_callback(self):
+        """
+        Test registering callable to audio callback
+        """
+        def audio_callback(s1, s2):
+            pass
+        self.core.register_audio_callback(audio_callback)
+
+    def test_register_audio_callback_throws(self):
+        """
+        Test registering non-callback object to audio callback (throws)
+        """
+        audio_callback = 0
+        with self.assertRaises(RuntimeError) as ctx:
+            self.core.register_audio_callback(audio_callback)

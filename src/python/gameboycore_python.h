@@ -29,28 +29,17 @@ public:
 
     void registerScanlineCallback(pybind11::object callable)
     {
-        if(PyCallable_Check(callable.ptr()))
-        {
-            scanline_callback_ = callable;
-        }
-        else
-        {
-            PyErr_SetString(PyExc_TypeError, "Object is not callable");
-            throw std::runtime_error("Object is not callable");
-        }
+        setCallable(scanline_callback_, callable);
     }
 
     void registerVBlankCallback(pybind11::object callable)
     {
-        if(PyCallable_Check(callable.ptr()))
-        {
-            vblank_callback_ = callable;
-        }
-        else
-        {
-            PyErr_SetString(PyExc_TypeError, "Object is not callable");
-            throw std::runtime_error("Object is not callable");
-        }
+        setCallable(vblank_callback_, callable);
+    }
+
+    void registerAudioCallback(pybind11::object callable)
+    {
+        setCallable(audio_callback_, callable);
     }
 
     void input(gb::Joy::Key key, KeyAction action)
@@ -118,12 +107,32 @@ private:
             vblank_callback_();
     }
 
+    void audioCallback(int16_t s1, int16_t s2)
+    {
+        if (audio_callback_)
+            audio_callback_(s1, s2);
+    }
+
     void setupCallbacks()
     {
         this->getGPU()->setRenderCallback(
             std::bind(&GameboyCorePython::scanlineCallback, this, std::placeholders::_1, std::placeholders::_2)
         );
         this->getGPU()->setVBlankCallback(std::bind(&GameboyCorePython::vblankCallback, this));
+        this->getAPU()->setAudioSampleCallback(std::bind(&GameboyCorePython::audioCallback, this, std::placeholders::_1, std::placeholders::_2));
+    }
+
+    void setCallable(pybind11::object& obj, pybind11::object& callable)
+    {
+        if (PyCallable_Check(callable.ptr()))
+        {
+            obj = callable;
+        }
+        else
+        {
+            PyErr_SetString(PyExc_TypeError, "Object is not callable");
+            throw std::runtime_error("Object is not callable");
+        }
     }
 
     template<class T, int N>
@@ -136,6 +145,7 @@ private:
 private:
     pybind11::object scanline_callback_;
     pybind11::object vblank_callback_;
+    pybind11::object audio_callback_;
 };
 
 #endif // GAMEBOYCORE_PYTHON_H
