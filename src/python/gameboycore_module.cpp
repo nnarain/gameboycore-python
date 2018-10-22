@@ -45,6 +45,11 @@ PYBIND11_MODULE(gameboycore, m) {
         .def_readwrite("attr",   &gb::Sprite::attr)
         .def_readwrite("height", &gb::Sprite::height);
 
+    py::enum_<gb::GameboyCore::ColorTheme>(m, "ColorTheme")
+        .value("DEFAULT", gb::GameboyCore::ColorTheme::DEFAULT)
+        .value("GOLD", gb::GameboyCore::ColorTheme::GOLD)
+        .value("GREEN", gb::GameboyCore::ColorTheme::GREEN);
+
     py::bind_vector<GameboyCorePython::ByteList>(m, "ByteList");
     py::bind_vector<GameboyCorePython::PixelList>(m, "PixelList");
     py::bind_vector<GameboyCorePython::SpriteList>(m, "SpriteList");
@@ -59,7 +64,7 @@ PYBIND11_MODULE(gameboycore, m) {
         .def("register_vblank_callback",   &GameboyCorePython::registerVBlankCallback)
         .def("get_background_hash",        &GameboyCorePython::getBackgroundHash)
         .def("get_background_tilemap",     &GameboyCorePython::getBackgroundTileMap)
-        .def("get_sprite_cache",           &GameboyCorePython::getSpriteCache);
-
+        .def("get_sprite_cache",           &GameboyCorePython::getSpriteCache)
+        .def("set_color_theme",            &GameboyCorePython::setColorTheme);
 }
 

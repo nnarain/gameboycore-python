@@ -107,15 +107,15 @@ private:
     void scanlineCallback(const gb::GPU::Scanline& scanline, int line)
     {
         auto list = arrayToList<gb::Pixel, 160>(scanline);
-        scanline_callback_(list, line);
 
-        if(line == 143)
-        {
-            if(PyCallable_Check(vblank_callback_.ptr()))
-            {
-                vblank_callback_();
-            }
-        }
+        if (scanline_callback_)
+            scanline_callback_(list, line);
+    }
+
+    void vblankCallback()
+    {
+        if (vblank_callback_)
+            vblank_callback_();
     }
 
     void setupCallbacks()
@@ -123,6 +123,7 @@ private:
         this->getGPU()->setRenderCallback(
             std::bind(&GameboyCorePython::scanlineCallback, this, std::placeholders::_1, std::placeholders::_2)
         );
+        this->getGPU()->setVBlankCallback(std::bind(&GameboyCorePython::vblankCallback, this));
     }
 
     template<class T, int N>
