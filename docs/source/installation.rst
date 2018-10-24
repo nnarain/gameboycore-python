@@ -18,6 +18,7 @@ From source
 -----------
 
     git clone https://github.com/nnarain/gameboycore-python
+    
     cd gameboycore-python
     
     pip install -e .

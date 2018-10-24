@@ -4,6 +4,8 @@ Examples
 Simple PyGame Example
 ---------------------
 
+Note: This is not a very optimized example.
+
 .. code-block:: python
 
     import gameboycore
@@ -42,10 +44,10 @@ Simple PyGame Example
 
         def run(self, filename):
             self.core.open(filename)
-            self.core.registerScanlineCallback(self.scanlineCallback)
+            self.core.register_scanline_callback(self.scanline_callback)
 
             while not self.done:
-                self.core.update(512)
+                self.core.emulate_frame()
 
                 for event in pygame.event.get():
                     if event.type == pygame.QUIT:
@@ -61,7 +63,7 @@ Simple PyGame Example
 
             self.core.input(gbkey, gbaction)
 
-        def scanlineCallback(self, scanline, line):
+        def scanline_callback(self, scanline, line):
             for i in range(len(scanline)):
                 pixel = scanline[i]
                 self.lcd.set_at((i,line), (pixel.r,pixel.g,pixel.b))
