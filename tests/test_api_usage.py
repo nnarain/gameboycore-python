@@ -52,3 +52,29 @@ class TestAPI(TestCase):
         audio_callback = 0
         with self.assertRaises(RuntimeError) as ctx:
             self.core.register_audio_callback(audio_callback)
+
+    def test_get_cpu_state(self):
+        """
+        Test getting the CPU state
+        """
+        self.core.open('roms/cpu_instrs.gb')
+        cpu_state = self.core.get_cpu_state()
+        # PC starts at 0x100
+        self.assertEqual(cpu_state.pc, 0x100)
+
+    def test_cpu_state_pickle(self):
+        """
+        Test pickling the CPU state
+        """
+        try:
+            import cPickle as pickle
+        except:
+            import pickle
+
+        self.core.open('roms/cpu_instrs.gb')
+        cpu = self.core.get_cpu_state()
+
+        data = pickle.dumps(cpu, 2)
+        cpu = pickle.loads(data)
+
+        self.assertEqual(cpu.pc, 0x100)
