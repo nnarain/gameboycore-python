@@ -73,9 +73,14 @@ public:
         setupCallbacks();
     }
 
-    SpriteList getSpriteCache()
+    gb::CPU::Status getCPUStatus()
     {
-        return this->getGPU()->getSpriteCache();
+        return this->getCPU()->getStatus();
+    }
+
+    std::size_t getBackgroundHash()
+    {
+        return this->getGPU()->getBackgroundHash();
     }
 
     ByteList getBackgroundTileMap()
@@ -83,9 +88,9 @@ public:
         return this->getGPU()->getBackgroundTileMap();
     }
 
-    std::size_t getBackgroundHash()
+    SpriteList getSpriteCache()
     {
-        return this->getGPU()->getBackgroundHash();
+        return this->getGPU()->getSpriteCache();
     }
 
     ~GameboyCorePython()
