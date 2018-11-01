@@ -25,7 +25,8 @@ install:
   - pip install nose-timer
 
 script:
-  - pip install -e .
+  - pip install -r requirements.txt
+  - python setup.py install
   - nosetests -v -w ./tests --with-timer
 
 after_success:

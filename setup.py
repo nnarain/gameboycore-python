@@ -11,6 +11,7 @@ from __future__ import print_function
 import os
 import sys
 import platform
+from git import Repo
 
 import setuptools
 from setuptools import setup
@@ -139,14 +140,28 @@ class BuildExt(build_ext):
 
 readme_file = os.path.join(DIR, 'README.rst')
 
+# Read requirements
+with open('requirements.txt') as f:
+    requirements = f.read().split('\n')
+
+# Read latest git tag
+repo = Repo(DIR)
+tags = [str(t) for t in reversed(repo.tags)]
+
+try:
+    latest_tag = tags[0]
+except IndexError:
+    print('Failed to get latest git tag')
+    exit(1)
+
 setup(
     name="gameboycore",
-    version="0.6.0",
+    version=latest_tag,
 
     ext_modules = [gameboycore_module],
     cmdclass = {'build_ext': BuildExt},
 
-    install_requires=['pybind11 >= 2.2'],
+    install_requires=requirements,
 
     # Authoring Information
     author="Natesh Narain",

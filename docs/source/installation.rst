@@ -21,4 +21,6 @@ From source
     
     cd gameboycore-python
     
-    pip install -e .
+    pip install -r requirements.txt
+    
+    python setup.py install
