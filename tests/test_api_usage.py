@@ -78,3 +78,14 @@ class TestAPI(TestCase):
         cpu = pickle.loads(data)
 
         self.assertEqual(cpu.pc, 0x100)
+
+    def test_memory_read_write(self):
+        """
+        Test writing to and then reading from memory
+        """
+        self.core.open('roms/cpu_instrs.gb')
+
+        self.core.write_memory(0xC000, 0xDE)
+        value = self.core.read_memory(0xC000)
+
+        self.assertEqual(value, 0xDE)

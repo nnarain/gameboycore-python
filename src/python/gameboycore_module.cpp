@@ -7,6 +7,7 @@
 */
 
 #include "gameboycore_python.h"
+#include <gameboycore/memorymap.h>
 
 #include <pybind11/pybind11.h>
 #include <pybind11/stl_bind.h>
@@ -129,6 +130,28 @@ PYBIND11_MODULE(gameboycore, m) {
             }
         ));
 
+    // Memory map enums
+    py::enum_<gb::memorymap::Locations>(m, "MemoryLocations", R"pbdoc()pbdoc")
+        .value("INTERRUPT_HANDLER_VBLANK",  gb::memorymap::INTERRUPT_HANDLER_VBLANK)
+        .value("INTERRUPT_HANDLER_LCDSTAT", gb::memorymap::INTERRUPT_HANDLER_LCDSTAT)
+        .value("INTERRUPT_HANDLER_TIMER",   gb::memorymap::INTERRUPT_HANDLER_TIMER)
+        .value("INTERRUPT_HANDLER_SERIAL",  gb::memorymap::INTERRUPT_HANDLER_SERIAL)
+        .value("INTERRUPT_HANDLER_JOYPAD",  gb::memorymap::INTERRUPT_HANDLER_JOYPAD)
+        .value("PROGRAM_START",             gb::memorymap::PROGRAM_START)
+        .value("BG_MAP_DATA_1_START",       gb::memorymap::BG_MAP_DATA_1_START)
+        .value("BG_MAP_DATA_1_END",         gb::memorymap::BG_MAP_DATA_1_END)
+        .value("BG_MAP_DATA_2_START",       gb::memorymap::BG_MAP_DATA_2_START)
+        .value("BG_MAP_DATA_2_END",         gb::memorymap::BG_MAP_DATA_2_END)
+        .value("JOYPAD_REGISTER",           gb::memorymap::JOYPAD_REGISTER)
+        .value("LCDC_REGISTER",             gb::memorymap::LCDC_REGISTER)
+        .value("LCD_STAT_REGISTER",         gb::memorymap::LCD_STAT_REGISTER)
+        .value("SCY",                       gb::memorymap::SCY_REGISTER)
+        .value("SCX",                       gb::memorymap::SCX_REGISTER)
+        .value("LY",                        gb::memorymap::LY_REGISTER)
+        .value("LYC",                       gb::memorymap::LYC_REGISTER)
+        .value("INTERRUPT_ENABLE",          gb::memorymap::INTERRUPT_ENABLE)
+        .value("INTERRUPT_FLAG",            gb::memorymap::INTERRUPT_FLAG);
+
     // GameboyCore
     py::class_<GameboyCorePython>(m, "GameboyCore", R"pbdoc(Instance of a GameboyCore)pbdoc")
         .def(py::init<>())
@@ -136,6 +159,8 @@ PYBIND11_MODULE(gameboycore, m) {
         .def("input",                      &GameboyCorePython::input,                    R"pbdoc(Joypad input)pbdoc")
         .def("update",                     &GameboyCorePython::update,                   R"pbdoc(Run n steps of the CPU)pbdoc")
         .def("emulate_frame",              &GameboyCorePython::emulateFrame,             R"pbdoc(Emulate a single frame)pbdoc")
+        .def("read_memory",                &GameboyCorePython::readMemory,               R"pbdoc(Read a value from memory)pbdoc")
+        .def("write_memory",               &GameboyCorePython::writeMemory,              R"pbdoc(Write a value to memory)pbdoc")
         .def("register_scanline_callback", &GameboyCorePython::registerScanlineCallback, R"pbdoc(Register a callback for scanlines)pbdoc")
         .def("register_vblank_callback",   &GameboyCorePython::registerVBlankCallback,   R"pbdoc(Register a callback for vblank)pbdoc")
         .def("register_audio_callback",    &GameboyCorePython::registerAudioCallback,    R"pbdoc(Register a callbackf for audio samples)pbdoc")
