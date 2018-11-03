@@ -78,6 +78,11 @@ public:
         return this->getCPU()->getStatus();
     }
 
+    ByteList getBatteryRam()
+    {
+        return this->getMMU()->getBatteryRam();
+    }
+
     std::size_t getBackgroundHash()
     {
         return this->getGPU()->getBackgroundHash();

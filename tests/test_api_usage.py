@@ -89,3 +89,4 @@ class TestAPI(TestCase):
         value = self.core.read_memory(0xC000)
 
         self.assertEqual(value, 0xDE)
+

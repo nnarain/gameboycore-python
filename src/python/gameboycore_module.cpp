@@ -168,7 +168,8 @@ PYBIND11_MODULE(gameboycore, m) {
         .def("get_background_hash",        &GameboyCorePython::getBackgroundHash,        R"pbdoc(Get a hash of the background tile map)pbdoc")
         .def("get_background_tilemap",     &GameboyCorePython::getBackgroundTileMap,     R"pbdoc(Get the background tile map)pbdoc")
         .def("get_sprite_cache",           &GameboyCorePython::getSpriteCache,           R"pbdoc(Get OAM sprites)pbdoc")
-        .def("set_color_theme",            &GameboyCorePython::setColorTheme,            R"pbdoc(Set a pre-configured color theme)pbdoc");
+        .def("set_color_theme",            &GameboyCorePython::setColorTheme,            R"pbdoc(Set a pre-configured color theme)pbdoc")
+        .def("get_battery_ram",            &GameboyCorePython::getBatteryRam,            R"pbdoc(Get battery RAM)pbdoc");
 
 #ifdef VERSION_INFO
     m.attr("__version__") = VERSION_INFO;
