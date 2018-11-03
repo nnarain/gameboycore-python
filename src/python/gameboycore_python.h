@@ -83,6 +83,11 @@ public:
         return this->getMMU()->getBatteryRam();
     }
 
+    void setBatteryRam(const ByteList& ram)
+    {
+        this->getMMU()->setBatteryRam(ram);
+    }
+
     std::size_t getBackgroundHash()
     {
         return this->getGPU()->getBackgroundHash();
