@@ -25,6 +25,9 @@ On Windows:
 On Linux:
 
     git clone https://github.com/nnarain/gameboycore-python
+    
+    git submodule update --init --recurvise
+    
     cd gameboycore-python
     
     pip install -e .
