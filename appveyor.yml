@@ -23,6 +23,12 @@ environment:
     - PYTHON_ROOT: "C:\\Python36-x64"
       PYTHON_VERSION: 3.6
       ARCH: 64
+    - PYTHON_ROOT: "C:\\Python37"
+      PYTHON_VERSION: 3.7
+      ARCH: 32
+    - PYTHON_ROOT: "C:\\Python37-x64"
+      PYTHON_VERSION: 3.7
+      ARCH: 64
 
 init:
   - set PATH=%PYTHON_ROOT%;%PYTHON_ROOT%\Scripts;%PYTHON_ROOT%\Lib;%PATH%
