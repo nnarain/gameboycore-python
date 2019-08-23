@@ -108,12 +108,13 @@ def cpp_flag(compiler):
     """Return the -std=c++[11/14] compiler flag.
     The c++14 is prefered over c++11 (when it is available).
     """
-    if has_flag(compiler, '-std=c++14'):
-        return '-std=c++14'
-    elif has_flag(compiler, '-std=c++11'):
-        return '-std=c++11'
-    else:
-        raise RuntimeError('Unsupported compiler -- at least C++11 support is needed!')
+    flags = ['-std=c++17', '-std=c++14', '-std=c++11']
+
+    for flag in flags:
+        if has_flag(compiler, flag):
+            return flag
+
+    raise RuntimeError('Unsupported compiler -- at least C++11 support is needed!')
 
 class BuildExt(build_ext):
     """A custom build extension for adding compiler-specific options."""
@@ -149,7 +150,7 @@ with open('requirements.txt') as f:
 
 try:
     latest_tag = subprocess.check_output(shlex.split('git describe --tags --abbrev=0'), cwd=DIR).decode('utf-8').strip()
-except IndexError:
+except Exception:
     print('Failed to get latest git tag')
     exit(1)
 
@@ -161,6 +162,7 @@ setup(
     cmdclass = {'build_ext': BuildExt},
 
     install_requires=requirements,
+    setup_requires=requirements,
 
     # Authoring Information
     author="Natesh Narain",
