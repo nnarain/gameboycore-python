@@ -16,5 +16,5 @@ done
 # Install packages and test
 for PYBIN in /opt/python/*/bin/; do
     "${PYBIN}/pip" install gameboycore --no-index -f /io/wheelhouse
-    (cd "$HOME"; "${PYBIN}/nosetests" -v -w ./tests)
+    (cd "$HOME"; "${PYBIN}/nosetests" -v --exe -w /io/tests)
 done
