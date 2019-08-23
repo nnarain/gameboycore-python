@@ -18,19 +18,7 @@ Python Bindings for `GameboyCore <https://github.com/nnarain/gameboycore>`_
 Installation
 ------------
 
-On Windows:
-
     pip install gameboycore
-
-On Linux:
-
-    git clone https://github.com/nnarain/gameboycore-python
-    
-    git submodule update --init --recurvise
-    
-    cd gameboycore-python
-    
-    pip install -e .
 
 Linux uses a source installation because PyPi does not accept `.whl` files and `pip` cannot install `.egg` files.
 
