@@ -10,8 +10,9 @@ from __future__ import print_function
 
 import os
 import sys
+import shlex
 import platform
-from git import Repo
+import subprocess
 
 import setuptools
 from setuptools import setup
@@ -145,18 +146,16 @@ with open('requirements.txt') as f:
     requirements = f.read().split('\n')
 
 # Read latest git tag
-repo = Repo(DIR)
-tags = [str(t) for t in reversed(repo.tags)]
 
 try:
-    latest_tag = tags[0]
+    latest_tag = subprocess.check_output(shlex.split('git describe --tags --abbrev=0'), cwd=DIR).decode('utf-8').strip()
 except IndexError:
     print('Failed to get latest git tag')
     exit(1)
 
 setup(
     name="gameboycore",
-    version=latest_tag,
+    version=str(latest_tag),
 
     ext_modules = [gameboycore_module],
     cmdclass = {'build_ext': BuildExt},
