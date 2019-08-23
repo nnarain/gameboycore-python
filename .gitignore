@@ -9,6 +9,7 @@
 
 build/*
 docs/build/*
+docs/source/_generate
 *egg*/*
 dist/*
 

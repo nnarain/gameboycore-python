@@ -22,4 +22,5 @@ an easily embeddable Gameboy emulator that can interacted with via Python script
    :maxdepth: 2
 
    installation
+   gameboycore
    example

@@ -18,6 +18,9 @@ From source
 -----------
 
     git clone https://github.com/nnarain/gameboycore-python
+    
     cd gameboycore-python
     
-    pip install -e .
+    pip install -r requirements.txt
+    
+    python setup.py install

@@ -29,31 +29,17 @@ public:
 
     void registerScanlineCallback(pybind11::object callable)
     {
-        if(PyCallable_Check(callable.ptr()))
-        {
-            scanline_callback_ = callable;
-            this->getGPU()->setRenderCallback(
-                std::bind(&GameboyCorePython::scanlineCallback, this, std::placeholders::_1, std::placeholders::_2)
-            );
-        }
-        else
-        {
-            PyErr_SetString(PyExc_TypeError, "Object is not callable");
-            throw std::runtime_error("Object is not callable");
-        }
+        setCallable(scanline_callback_, callable);
     }
 
     void registerVBlankCallback(pybind11::object callable)
     {
-        if(PyCallable_Check(callable.ptr()))
-        {
-            vblank_callback_ = callable;
-        }
-        else
-        {
-            PyErr_SetString(PyExc_TypeError, "Object is not callable");
-            throw std::runtime_error("Object is not callable");
-        }
+        setCallable(vblank_callback_, callable);
+    }
+
+    void registerAudioCallback(pybind11::object callable)
+    {
+        setCallable(audio_callback_, callable);
     }
 
     void input(gb::Joy::Key key, KeyAction action)
@@ -70,21 +56,41 @@ public:
 
     void open(const std::string& rom_file)
     {
+        // open file, and seek to end
         std::ifstream file(rom_file, std::ios::binary | std::ios::ate);
+        // get file size
         auto size = file.tellg();
-
+        // create a buffer for the file
         std::vector<uint8_t> buffer;
         buffer.resize(size);
-
+        // seek to begin and read file into buffer
         file.seekg(0, std::ios::beg);
         file.read((char*)&buffer[0], size);
-
+        // load ROM
         this->loadROM(&buffer[0], size);
+
+        // setup callbacks
+        setupCallbacks();
     }
 
-    SpriteList getSpriteCache()
+    gb::CPU::Status getCPUStatus()
     {
-        return this->getGPU()->getSpriteCache();
+        return this->getCPU()->getStatus();
+    }
+
+    ByteList getBatteryRam()
+    {
+        return this->getMMU()->getBatteryRam();
+    }
+
+    void setBatteryRam(const ByteList& ram)
+    {
+        this->getMMU()->setBatteryRam(ram);
+    }
+
+    std::size_t getBackgroundHash()
+    {
+        return this->getGPU()->getBackgroundHash();
     }
 
     ByteList getBackgroundTileMap()
@@ -92,9 +98,9 @@ public:
         return this->getGPU()->getBackgroundTileMap();
     }
 
-    std::size_t getBackgroundHash()
+    SpriteList getSpriteCache()
     {
-        return this->getGPU()->getBackgroundHash();
+        return this->getGPU()->getSpriteCache();
     }
 
     ~GameboyCorePython()
@@ -105,14 +111,42 @@ private:
     void scanlineCallback(const gb::GPU::Scanline& scanline, int line)
     {
         auto list = arrayToList<gb::Pixel, 160>(scanline);
-        scanline_callback_(list, line);
 
-        if(line == 143)
+        if (scanline_callback_)
+            scanline_callback_(list, line);
+    }
+
+    void vblankCallback()
+    {
+        if (vblank_callback_)
+            vblank_callback_();
+    }
+
+    void audioCallback(int16_t s1, int16_t s2)
+    {
+        if (audio_callback_)
+            audio_callback_(s1, s2);
+    }
+
+    void setupCallbacks()
+    {
+        this->getGPU()->setRenderCallback(
+            std::bind(&GameboyCorePython::scanlineCallback, this, std::placeholders::_1, std::placeholders::_2)
+        );
+        this->getGPU()->setVBlankCallback(std::bind(&GameboyCorePython::vblankCallback, this));
+        this->getAPU()->setAudioSampleCallback(std::bind(&GameboyCorePython::audioCallback, this, std::placeholders::_1, std::placeholders::_2));
+    }
+
+    void setCallable(pybind11::object& obj, pybind11::object& callable)
+    {
+        if (PyCallable_Check(callable.ptr()))
         {
-            if(PyCallable_Check(vblank_callback_.ptr()))
-            {
-                vblank_callback_();
-            }
+            obj = callable;
+        }
+        else
+        {
+            PyErr_SetString(PyExc_TypeError, "Object is not callable");
+            throw std::runtime_error("Object is not callable");
         }
     }
 
@@ -126,6 +160,7 @@ private:
 private:
     pybind11::object scanline_callback_;
     pybind11::object vblank_callback_;
+    pybind11::object audio_callback_;
 };
 
 #endif // GAMEBOYCORE_PYTHON_H
