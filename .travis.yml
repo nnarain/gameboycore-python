@@ -1,40 +1,27 @@
-language: python
-dist: trusty
-sudo: required
+matrix:
+  include:
+    - sudo: required
+      services:
+        - docker
+      env: DOCKER_IMAGE=quay.io/pypa/manylinux1_x86_64
+           PLAT=manylinux1_x86_64
 
-os:
-  - linux
+    - sudo: required
+      services:
+        - docker
+      env: DOCKER_IMAGE=quay.io/pypa/manylinux1_i686
+           PRE_CMD=linux32
+           PLAT=manylinux1_i686
 
-python:
-  - "2.7"
-  - "3.4"
-  - "3.5"
-  - "3.6"
-
-compiler: g++
-
-before_install:
-  - sudo add-apt-repository ppa:ubuntu-toolchain-r/test -y && sudo apt-get update
-  - sudo apt-get install build-essential g++-7 -qq -y
+    - sudo: required
+      services:
+        - docker
+      env: DOCKER_IMAGE=quay.io/pypa/manylinux2010_x86_64
+           PLAT=manylinux2010_x86_64
 
 install:
-  - python --version
-  - pip --version
-  - pip install wheel
-  - pip install nose
-  - pip install nose-timer
+  - docker pull $DOCKER_IMAGE
 
 script:
-  - pip install -r requirements.txt
-  - python setup.py install
-  - nosetests -v -w ./tests --with-timer
-
-after_success:
-  - python setup.py bdist_egg
-
-deploy:
-  provider: pypi
-  user: nnarain
-  password:
-    secure: AxAqP6HNSijVIC0AOu7Jnuy6fZ3fp8C9oBsJvq2s16ezrMKpuUP96QlmIErE1nkxqfu3dt2lQ8P1jMm8r77zIZQnniLoiJlAOihm8WIVw9BskLn33PbHeLi7pA9hZigo4KUuxasdomwCDLxeBH4gFJnlN/qK6XZx4iH9mGBdDlz5PDJ4d1EFOBCBA/A3+r61l2euyHuGwYkSDqcJUlQaOKhMlufVG0vIcPf1kXBFNxVbbpHUdB5XufKh+ET4eImUQXQ5ZpuJf6+QYFXvDFm6wyV6haeOlUlT33t1ZkONTKRCsnVonX+Pj4MDntPu3aLarzCotBhwhERTxmWmr95MxBZsXE+pr0futFIZDCMWa1HwHkiTVmsAxwprihEODZ2cLIzp69RPmHsfTJfCUzgR9lvTeOuKQ5SQ5v/nz1GiGduBxf9yRHDFfacbkiAH6GxtB17QUtEl6l+AkDXy4j8Z4ylYbNVNPApcGhxSvSnJi54FgkITtsOxNPkE10SXkDKJDfUpDT5Sxf8aGEYhy8ZDl1pAV2m9sImRRcAt1GSfJrloR77qYjnrgEhrvvQ3FSKMy37HmkwLAq7evZqYDrglQ6hd2JH06vWkuJKC4lAoXrzui6c7mgM+fY1lrkjAT1lVMem0/SLjpYlHZJYBYvTwMOzqNzR/VgQQN1NZyavNoZk=
-  distributions: sdist
+  - docker run --rm -e PLAT=$PLAT -v `pwd`:/io $DOCKER_IMAGE $PRE_CMD /io/ci/travis/build.sh
+  - ls wheelhouse/
